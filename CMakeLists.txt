@@ -6,6 +6,7 @@ find_program(CLANGXX_COMPILER NAMES clang++)
 message(STATUS "Clang compiler: ${CLANG_COMPILER}")
 message(STATUS "Clang++ compiler: ${CLANGXX_COMPILER}")
 
+# 若当前环境未安装 clang 编译器则直接报错
 if(NOT CLANG_COMPILER)
     message(FATAL_ERROR "Clang compiler not found. Please install Clang.")
 endif()
@@ -26,6 +27,7 @@ endif()
 
 project(SastDog VERSION 1.0.0)
 
+# 设置当前项目 C++标准
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -34,7 +36,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # 添加全局编译选项
-# add_compile_options(-Wall -Wextra -Wpedantic)
+add_compile_options(-Wall -Wextra -Wpedantic)
 
 # 检查 VCPKG_ROOT 是否设置
 if(NOT DEFINED ENV{VCPKG_ROOT})
