@@ -21,6 +21,8 @@ link_directories(${LLVM_LIBRARY_DIRS})
 include_directories(SYSTEM ${LLVM_INCLUDE_DIRS})
 include_directories(SYSTEM ${CMAKE_CURRENT_LIST_DIR}/third_party/llvm_18/include)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
+
 set (clang_paths
  ${LLVM_INSTALL_PREFIX}
  ${LLVM_INSTALL_PREFIX}/lib/cmake
@@ -29,12 +31,13 @@ set (clang_paths
  ${LLVM_INSTALL_PREFIX}/share/clang/cmake
  ${LLVM_INSTALL_PREFIX}/share/llvm/cmake
 )
-
 find_package(Clang REQUIRED CONFIG PATHS "${clang_paths}")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
+find_package(spdlog REQUIRED)
 
 add_executable(${PROJECT_NAME} main.cpp)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
