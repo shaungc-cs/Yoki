@@ -1,23 +1,23 @@
 cmake_minimum_required(VERSION 3.20)
 
 # 查找 clang 和 clang++ 编译器
-find_program(CLANG_COMPILER NAMES clang)
-find_program(CLANGXX_COMPILER NAMES clang++)
-message(STATUS "Clang compiler: ${CLANG_COMPILER}")
-message(STATUS "Clang++ compiler: ${CLANGXX_COMPILER}")
+# find_program(CLANG_COMPILER NAMES clang)
+# find_program(CLANGXX_COMPILER NAMES clang++)
+# message(STATUS "Clang compiler: ${CLANG_COMPILER}")
+# message(STATUS "Clang++ compiler: ${CLANGXX_COMPILER}")
 
-if(NOT CLANG_COMPILER)
-    message(FATAL_ERROR "Clang compiler not found. Please install Clang.")
-endif()
+# if(NOT CLANG_COMPILER)
+#     message(FATAL_ERROR "Clang compiler not found. Please install Clang.")
+# endif()
 
-if(NOT CLANGXX_COMPILER)
-    message(FATAL_ERROR "Clang++ compiler not found. Please install Clang++.")
-endif()
+# if(NOT CLANGXX_COMPILER)
+#     message(FATAL_ERROR "Clang++ compiler not found. Please install Clang++.")
+# endif()
 
-# 设置编译器的版本必须在project命令之前
-# 设置 C 和 C++ 编译器为 clang 和 clang++
-set(CMAKE_C_COMPILER ${CLANG_COMPILER})
-set(CMAKE_CXX_COMPILER ${CLANGXX_COMPILER})
+# # 设置编译器的版本必须在project命令之前
+# # 设置 C 和 C++ 编译器为 clang 和 clang++
+# set(CMAKE_C_COMPILER ${CLANG_COMPILER})
+# set(CMAKE_CXX_COMPILER ${CLANGXX_COMPILER})
 
 # 设置默认构建类型为 Release，如果未指定的话
 if(NOT CMAKE_BUILD_TYPE)
@@ -45,8 +45,5 @@ endif()
 
 # 配置 CMake 使用 Vcpkg 的 toolchain 查找 Vcpkg 依赖包
 set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
-
-# 优先使用 vcpkg 安装的包
-list(APPEND CMAKE_PREFIX_PATH "${VCPKG_ROOT}/installed/x64-linux")
 
 add_subdirectory(src)
