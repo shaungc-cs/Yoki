@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-# 查找 clang 和 clang++ 编译器
+# # 查找 clang 和 clang++ 编译器
 # find_program(CLANG_COMPILER NAMES clang)
 # find_program(CLANGXX_COMPILER NAMES clang++)
 # message(STATUS "Clang compiler: ${CLANG_COMPILER}")
