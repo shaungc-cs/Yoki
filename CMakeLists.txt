@@ -1,9 +1,40 @@
 cmake_minimum_required(VERSION 3.20)
-project(sast_dog VERSION 1.0.0)
+
+# 查找 clang 和 clang++ 编译器
+find_program(CLANG_COMPILER NAMES clang)
+find_program(CLANGXX_COMPILER NAMES clang++)
+message(STATUS "Clang compiler: ${CLANG_COMPILER}")
+message(STATUS "Clang++ compiler: ${CLANGXX_COMPILER}")
+
+if(NOT CLANG_COMPILER)
+    message(FATAL_ERROR "Clang compiler not found. Please install Clang.")
+endif()
+
+if(NOT CLANGXX_COMPILER)
+    message(FATAL_ERROR "Clang++ compiler not found. Please install Clang++.")
+endif()
+
+# 设置编译器的版本必须在project命令之前
+# 设置 C 和 C++ 编译器为 clang 和 clang++
+set(CMAKE_C_COMPILER ${CLANG_COMPILER})
+set(CMAKE_CXX_COMPILER ${CLANGXX_COMPILER})
+
+# 设置默认构建类型为 Release，如果未指定的话
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
+endif()
+
+project(SastDog VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+# 启用生成 compile_commands.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# 添加全局编译选项
+# add_compile_options(-Wall -Wextra -Wpedantic)
 
 # 检查 VCPKG_ROOT 是否设置
 if(NOT DEFINED ENV{VCPKG_ROOT})
@@ -18,25 +49,4 @@ set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE 
 # 优先使用 vcpkg 安装的包
 list(APPEND CMAKE_PREFIX_PATH "${VCPKG_ROOT}/installed/x64-linux")
 
-# 查找 LLVM 和 Clang 包
-find_package(LLVM REQUIRED CONFIG)
-
-# 打印 LLVM 相关变量以进行调试
-message(STATUS "LLVM_INCLUDE_DIRS: ${LLVM_INCLUDE_DIRS}")
-message(STATUS "LLVM_LIBRARY_DIRS: ${LLVM_LIBRARY_DIRS}")
-
-# 指定源文件
-add_executable(${PROJECT_NAME} src/main.cpp)
-
-# 显式添加库搜索路径和头文件搜索路径
-target_link_directories(${PROJECT_NAME} PRIVATE ${LLVM_LIBRARY_DIRS})
-target_include_directories(${PROJECT_NAME} PRIVATE ${LLVM_INCLUDE_DIRS})
-
-# 禁用 ABI Breaking Checks
-target_compile_definitions(${PROJECT_NAME} PRIVATE LLVM_DISABLE_ABI_BREAKING_CHECKS_ENFORCING=1)
-
-
-target_link_libraries(${PROJECT_NAME}
-  clangTooling
-  clangASTMatchers
-)
+add_subdirectory(src)
