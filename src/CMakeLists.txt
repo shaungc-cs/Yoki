@@ -55,4 +55,8 @@ target_link_libraries(${PROJECT_NAME}
   clangSerialization
   clangStaticAnalyzerCore
   clangStaticAnalyzerFrontend
+  config_node
 )
+
+
+add_subdirectory(common)

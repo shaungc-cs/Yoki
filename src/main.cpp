@@ -1,4 +1,3 @@
-#include "spdlog/sinks/basic_file_sink.h"
 #include <clang/AST/ASTContext.h>
 #include <clang/AST/RecursiveASTVisitor.h>
 #include <clang/Frontend/CompilerInstance.h>
@@ -6,6 +5,8 @@
 #include <clang/Tooling/CommonOptionsParser.h>
 #include <clang/Tooling/Tooling.h>
 #include <spdlog/spdlog.h>
+
+#include "ConfigNode.h"
 
 using namespace clang;
 using namespace clang::tooling;
