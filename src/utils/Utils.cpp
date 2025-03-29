@@ -1,11 +1,10 @@
+#include "Utils.h"
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <regex>
 #include <spdlog/spdlog.h>
-#include <string>
-#include <vector>
 
-static std::vector<std::string>
+std::vector<std::string>
 getFilesToBeChecked(const std::string &compileCommandDir,
                     const std::vector<std::string> &excludePaths) {
   auto compileCommandFilePath = compileCommandDir + "/compile_commands.json";

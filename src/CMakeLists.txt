@@ -56,7 +56,9 @@ target_link_libraries(${PROJECT_NAME}
   clangStaticAnalyzerCore
   clangStaticAnalyzerFrontend
   config
+  utils
 )
 
-
-add_subdirectory(common)
+add_subdirectory(config)
+add_subdirectory(utils)
+add_subdirectory(thread_pool)
