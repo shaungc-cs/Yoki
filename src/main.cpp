@@ -4,12 +4,14 @@
 #include <clang/Frontend/FrontendActions.h>
 #include <clang/Tooling/CommonOptionsParser.h>
 #include <clang/Tooling/Tooling.h>
+#include <memory>
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 #include <string>
 
+// #include "Analyse.h"
 #include "Config.h"
-#include "ThreadPool.h"
+// #include "ThreadPool.h"
 #include "Utils.h"
 
 using namespace clang;
@@ -43,29 +45,31 @@ int main(int argc, const char **argv) {
   }
 
   // 根据项目路径找到compile_command.json文件
-  auto compileCommandDir = config->getProgramPath() + "/build";
-
-  auto fileVecToBeChecked =
-      getFilesToBeChecked(compileCommandDir, config->getExcludePaths());
+  std::string compileCommandDir = config->getProgramPath() + "/build";
 
   std::string errorMsg;
-  auto compilationDB =
-      CompilationDatabase::loadFromDirectory(compileCommandDir, errorMsg);
+  auto compilationDB = clang::tooling::CompilationDatabase::loadFromDirectory(
+      compileCommandDir, errorMsg);
 
   if (!compilationDB) {
     spdlog::error("Failed to load compile_commands.json: {}", errorMsg);
     return 1;
   }
 
-  // 获取系统的逻辑处理器数量，然后计算线程池大小
-  unsigned int num_threads = std::thread::hardware_concurrency() / 2;
-  num_threads = num_threads > 0 ? num_threads : 1; // 防止除以零或零个线程
+  std::shared_ptr compilationDBPtr = std::move(compilationDB);
 
-  // 创建线程池
-  ThreadPool threadPool(num_threads);
+  auto fileVecToBeChecked =
+      getFilesToBeChecked(compileCommandDir, config->getExcludePaths());
 
-  // 将所有的源文件任务添加到线程池中
-  for (const auto &file : fileVecToBeChecked) {
-    threadPool.enqueue([file] { runToolOnFile(file); });
-  }
+  // // 获取系统的逻辑处理器数量，然后计算线程池大小
+  // unsigned int num_threads = std::thread::hardware_concurrency() / 2;
+  // num_threads = num_threads > 0 ? num_threads : 1; // 防止除以零或零个线程
+
+  // // 创建线程池
+  // ThreadPool threadPool(num_threads);
+
+  // // 将所有的源文件任务添加到线程池中
+  // for (auto file : fileVecToBeChecked) {
+  //   threadPool.enqueue([&] { Analyse::analyse(compileCommandDir, file); });
+  // }
 }

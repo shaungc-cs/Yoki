@@ -21,10 +21,13 @@ ThreadPool::ThreadPool(int num_threads) : stop(false) {
     });
 }
 
-template <class F> void ThreadPool::enqueue(F &&f) {
+void ThreadPool::enqueue(
+    std::function<void(std::shared_ptr<clang::tooling::CompilationDatabase>,
+                       const std::string &)>
+        f) {
   {
     std::unique_lock<std::mutex> lock(queue_mutex);
-    tasks.emplace(std::forward<F>(f));
+    tasks.emplace(f);
   }
   condition.notify_one();
 }

@@ -57,8 +57,16 @@ target_link_libraries(${PROJECT_NAME}
   clangStaticAnalyzerFrontend
   config
   utils
+  analyse
+  sast_dog_ast_frontend_action
 )
 
 add_subdirectory(config)
 add_subdirectory(utils)
-add_subdirectory(thread_pool)
+# add_subdirectory(thread_pool)
+add_subdirectory(analyse)
+# add_subdirectory(rules)
+add_subdirectory(visitor)
+add_subdirectory(frontend_action)
+add_subdirectory(consumer)
+# add_subdirectory(rule_manager)

@@ -1,17 +1,19 @@
 #pragma once
+#include <clang/Tooling/CompilationDatabase.h>
 #include <condition_variable>
 #include <functional>
 #include <mutex>
 #include <queue>
-#include <thread>
-#include <vector>
 
 class ThreadPool {
 public:
   ThreadPool(int num_threads);
   ~ThreadPool();
 
-  template <class F> void enqueue(F &&f);
+  void enqueue(
+      std::function<void(std::shared_ptr<clang::tooling::CompilationDatabase>,
+                         const std::string &)>
+          f);
 
 private:
   std::vector<std::thread> workers;
