@@ -1,10 +1,7 @@
 {
   "program_name": "test",
   "program_path": "/root/workspace/sast_dog",
-  "rules_enabled":[
-    "rule1",
-    "rule2",
-    "rule3"
+  "rules_enabled": [
   ],
   "exclude_paths":[
     ".*/third_party/.*"

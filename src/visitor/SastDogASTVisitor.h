@@ -7,5 +7,9 @@ using namespace clang;
 
 class SastDogASTVisitor : public RecursiveASTVisitor<SastDogASTVisitor> {
   public:
-    bool VisitCXXMethodDecl(CXXMethodDecl *Method) override;
+    explicit SastDogASTVisitor(ASTContext *Context) : Context(Context) {}
+    bool VisitCXXMethodDecl(CXXMethodDecl *Method);
+
+    private:
+    ASTContext *Context;
 };

@@ -6,6 +6,7 @@
 
 class SastDogASTConsumer : public clang::ASTConsumer {
 public:
+  explicit SastDogASTConsumer(ASTContext* Context) : visitor(Context) {}
   virtual void HandleTranslationUnit(clang::ASTContext &Context) {
     visitor.TraverseDecl(Context.getTranslationUnitDecl());
   }
