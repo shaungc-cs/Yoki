@@ -9,7 +9,7 @@
 #include <spdlog/spdlog.h>
 #include <string>
 
-// #include "Analyse.h"
+#include "Analyse.h"
 #include "Config.h"
 // #include "ThreadPool.h"
 #include "Utils.h"
@@ -60,6 +60,8 @@ int main(int argc, const char **argv) {
 
   auto fileVecToBeChecked =
       getFilesToBeChecked(compileCommandDir, config->getExcludePaths());
+
+  Analyse::analyse(compilationDBPtr, fileVecToBeChecked);
 
   // // 获取系统的逻辑处理器数量，然后计算线程池大小
   // unsigned int num_threads = std::thread::hardware_concurrency() / 2;
