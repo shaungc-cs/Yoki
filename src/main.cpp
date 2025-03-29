@@ -4,79 +4,57 @@
 #include <clang/Frontend/FrontendActions.h>
 #include <clang/Tooling/CommonOptionsParser.h>
 #include <clang/Tooling/Tooling.h>
+#include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
+#include <string>
 
-#include "ConfigNode.h"
+#include "Config.h"
+#include "Utils.hpp"
 
 using namespace clang;
 using namespace clang::tooling;
 
 int llvm::DisableABIBreakingChecks = 1;
 
-class FunctionVisitor : public RecursiveASTVisitor<FunctionVisitor> {
-public:
-  explicit FunctionVisitor(ASTContext *Context) : Context(Context) {}
-
-  bool VisitFunctionDecl(FunctionDecl *Declaration) {
-    if (Declaration->isThisDeclarationADefinition()) {
-      llvm::outs() << "Found function: "
-                   << Declaration->getNameInfo().getName().getAsString()
-                   << "\n";
-    }
-    return true;
-  }
-
-private:
-  ASTContext *Context;
-};
-
-class FunctionASTConsumer : public ASTConsumer {
-public:
-  explicit FunctionASTConsumer(ASTContext *Context) : Visitor(Context) {}
-
-  virtual void HandleTranslationUnit(ASTContext &Context) override {
-    Visitor.TraverseDecl(Context.getTranslationUnitDecl());
-  }
-
-private:
-  FunctionVisitor Visitor;
-};
-
-class FunctionFrontendAction : public ASTFrontendAction {
-public:
-  virtual std::unique_ptr<ASTConsumer>
-  CreateASTConsumer(CompilerInstance &CI, StringRef file) override {
-    return std::make_unique<FunctionASTConsumer>(&CI.getASTContext());
-  }
-};
-
 // Command line options
 static llvm::cl::OptionCategory MyToolCategory("SastDog options");
 
 int main(int argc, const char **argv) {
+  // 设置日志级别为 info
+  spdlog::set_level(spdlog::level::info);
+
   llvm::cl::HideUnrelatedOptions(MyToolCategory);
 
   // 定义一个命令行选项，并将其归类到自定义类别中
-  static llvm::cl::opt<std::string> compileCommandFilePath(
+  static llvm::cl::opt<std::string> configFilePath(
       llvm::cl::Positional, llvm::cl::desc("path to compile_command.json"),
       llvm::cl::Required, llvm::cl::cat(MyToolCategory));
 
   llvm::cl::ParseCommandLineOptions(argc, argv, "SastDog\n");
 
-  spdlog::info("Path to compiler command file: " + compileCommandFilePath);
+  spdlog::info("Path to configuration file: " + configFilePath);
 
-  // 设置日志级别为 info
-  spdlog::set_level(spdlog::level::info);
+  // 读取配置文件
+  auto config = Config::loadConfigFromFile(configFilePath);
+  if (!config) {
+    spdlog::error("Failed to load config file");
+    return 1;
+  }
 
-  // auto ExpectedParser = CommonOptionsParser::create(argc, argv,
-  // MyToolCategory); if (!ExpectedParser) {
-  //   llvm::errs() << ExpectedParser.takeError();
-  //   return 1;
-  // }
-  // CommonOptionsParser &OptionsParser = *ExpectedParser;
+  // 根据项目路径找到compile_command.json文件
+  auto compileCommandDir = config->getProgramPath() + "/build";
 
-  // ClangTool Tool(OptionsParser.getCompilations(),
-  //                OptionsParser.getSourcePathList());
+  auto fileVecToBeChecked =
+      getFilesToBeChecked(compileCommandDir, config->getExcludePaths());
 
-  // return Tool.run(newFrontendActionFactory<FunctionFrontendAction>().get());
+  std::string errorMsg;
+  auto compilationDB =
+      CompilationDatabase::loadFromDirectory(compileCommandDir, errorMsg);
+
+  if (!compilationDB) {
+    spdlog::error("Failed to load compile_commands.json: {}", errorMsg);
+    return 1;
+  }
+
+  ClangTool Tool(*compilationDB, fileVecToBeChecked);
 }
