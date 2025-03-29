@@ -1,26 +1,15 @@
 #include "Analyse.h"
+#include "SastDogASTFrontendAction.h"
+#include <atomic>
 #include <clang/Tooling/CompilationDatabase.h>
+#include <clang/Tooling/Tooling.h>
 #include <spdlog/spdlog.h>
 #include <string>
 #include <thread>
+#include <vector>
 
 using namespace clang::tooling;
 using namespace clang;
-
-// void Analyse::analyse(std::string &path, const std::string &file) {
-//   // std::string errorMsg;
-//   // auto compilationDB =
-//   // clang::tooling::CompilationDatabase::loadFromDirectory(
-//   //     llvm::StringRef(path), errorMsg);
-
-//   // if (!compilationDB) {
-//   //   spdlog::error("Failed to load compile_commands.json: {}", errorMsg);
-//   //   return;
-//   // }
-
-//   // ClangTool Tool(*compilationDB, file);
-//   // Tool.run(newFrontendActionFactory<SastDogASTFrontendAction>().get());
-// }
 
 int Analyse::getThreadSize() {
   // 获取系统的逻辑处理器数量，然后计算线程池大小
@@ -36,9 +25,13 @@ void Analyse::analyse(std::shared_ptr<CompilationDatabase> compilationDB,
   std::vector<std::thread> workerPool;
   auto threadSize = Analyse::getThreadSize();
 
+  std::mutex mtx;
+  int proceedFileCount = 0;
+
   for (int i = 0; i < threadSize; ++i) {
-    workerPool.emplace_back(
-        std::thread([&] { Analyse::doAnalyse(compilationDB, fileVec); }));
+    workerPool.emplace_back(std::thread([&] {
+      Analyse::doAnalyse(compilationDB, fileVec, mtx, proceedFileCount);
+    }));
   }
 
   // Wait for all threads to finish their jobs.
@@ -50,4 +43,24 @@ void Analyse::analyse(std::shared_ptr<CompilationDatabase> compilationDB,
 }
 
 void Analyse::doAnalyse(std::shared_ptr<CompilationDatabase> compilationDB,
-                        std::vector<std::string> fileVec) {}
+                        std::vector<std::string> fileVec, std::mutex &mtx,
+                        int proceedFileCount) {
+  auto allFileSize = (int)fileVec.size();
+
+  while (true) {
+    std::vector<std::string> currentFileVec;
+    std::string file;
+    {
+      std::unique_lock<std::mutex> lock(mtx);
+      if (proceedFileCount >= allFileSize) {
+        break; // No more files to process
+      }
+      file = fileVec[proceedFileCount++];
+    }
+
+    currentFileVec.push_back(file);
+
+    ClangTool Tool(*compilationDB, currentFileVec);
+    Tool.run(newFrontendActionFactory<SastDogASTFrontendAction>().get());
+  }
+}

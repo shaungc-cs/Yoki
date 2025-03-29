@@ -13,5 +13,6 @@ public:
   static void analyse(std::shared_ptr<CompilationDatabase> compilationDB,
                       std::vector<std::string> fileVec);
   static void doAnalyse(std::shared_ptr<CompilationDatabase> compilationDB,
-                        std::vector<std::string> fileVec);
+                        std::vector<std::string> fileVec, std::mutex &mtx,
+                        int proceedFileCount);
 };

@@ -2,7 +2,6 @@
 
 #include <clang/AST/ASTConsumer.h>
 #include <clang/AST/ASTContext.h>
-
 #include "SastDogASTVisitor.h"
 
 class SastDogASTConsumer : public clang::ASTConsumer {

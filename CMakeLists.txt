@@ -32,6 +32,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+include_directories(/usr/include) # 确保包含标准库路径
+include_directories(/usr/local/include) # 确保包含本地安装路径
+
 # 启用生成 compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
