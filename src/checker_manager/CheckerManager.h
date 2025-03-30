@@ -11,6 +11,10 @@ class CheckerManager{
 
   bool registerChecker(CheckerBase* checker);
 
+  #define __SAST_DOG_VISIT_NODE__(NODE) bool Visit##NODE(NODE *node, ASTContext *context);
+  #include "checkers.inc"
+  #undef __SAST_DOG_VISIT_NODE__
+
   private:
     CheckerManager() = default;
     ~CheckerManager() = default;
@@ -25,5 +29,6 @@ class CheckerManager{
 };
 
 
-CheckerManager* checkerManager = CheckerManager::getInstance();
+extern CheckerManager* checkerManager;
+
 #endif /* E27B18B3_6DD1_45E2_BCFC_BD7AF2D2CBB8 */

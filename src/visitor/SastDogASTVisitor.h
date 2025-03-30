@@ -3,6 +3,7 @@
 
 #include <clang/AST/AST.h>
 #include <clang/AST/RecursiveASTVisitor.h>
+#include "CheckerManager.h"
 
 using namespace clang;
 
@@ -18,7 +19,6 @@ class SastDogASTVisitor : public RecursiveASTVisitor<SastDogASTVisitor> {
 
     private:
     ASTContext *Context;
-    // RulesManager rulesManager = RulesManager::getInstance();
 };
 
 
