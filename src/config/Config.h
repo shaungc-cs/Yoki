@@ -1,4 +1,5 @@
-#pragma once
+#ifndef E32C7F65_C606_4DEE_9B24_B11CA35DAD40
+#define E32C7F65_C606_4DEE_9B24_B11CA35DAD40
 
 #include <memory>
 #include <string>
@@ -26,3 +27,6 @@ private:
   std::vector<std::string> rulesVec;
   std::vector<std::string> excludePaths;
 };
+
+
+#endif /* E32C7F65_C606_4DEE_9B24_B11CA35DAD40 */

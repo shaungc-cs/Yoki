@@ -21,7 +21,7 @@ link_directories(${LLVM_LIBRARY_DIRS})
 include_directories(SYSTEM ${LLVM_INCLUDE_DIRS})
 include_directories(SYSTEM ${CMAKE_CURRENT_LIST_DIR}/third_party/llvm_18/include)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -w")
 
 set (clang_paths
  ${LLVM_INSTALL_PREFIX}
@@ -70,5 +70,5 @@ add_subdirectory(visitor)
 add_subdirectory(frontend_action)
 add_subdirectory(consumer)
 add_subdirectory(common)
-# add_subdirectory(checker_manager)
+add_subdirectory(checker_manager)
 # add_subdirectory(rule_manager)

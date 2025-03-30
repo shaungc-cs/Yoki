@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DB5ADE1B_7B26_4E01_B31A_D3E852276114
+#define DB5ADE1B_7B26_4E01_B31A_D3E852276114
 #include <clang/Tooling/CompilationDatabase.h>
 #include <condition_variable>
 #include <functional>
@@ -23,3 +24,5 @@ private:
   std::condition_variable condition;
   bool stop;
 };
+
+#endif /* DB5ADE1B_7B26_4E01_B31A_D3E852276114 */
