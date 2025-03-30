@@ -10,18 +10,17 @@
 #include <string>
 
 #include "Analysis.h"
-#include "Config.h"
-// #include "ThreadPool.h"
-#include "Utils.h"
-
 #include "CheckerManager.h"
+#include "SastConfig.h"
+#include "Utils.h"
 
 using namespace clang;
 using namespace clang::tooling;
 
+// 不定义该变量会导致链接错误
 int llvm::DisableABIBreakingChecks = 1;
 
-// Command line options
+// 定义自定义命令行集合
 static llvm::cl::OptionCategory MyToolCategory("SastDog options");
 
 int main(int argc, const char **argv) {
@@ -32,7 +31,7 @@ int main(int argc, const char **argv) {
 
   // 定义一个命令行选项，并将其归类到自定义类别中
   static llvm::cl::opt<std::string> configFilePath(
-      llvm::cl::Positional, llvm::cl::desc("path to compile_command.json"),
+      llvm::cl::Positional, llvm::cl::desc("Path to configuration file"),
       llvm::cl::Required, llvm::cl::cat(MyToolCategory));
 
   llvm::cl::ParseCommandLineOptions(argc, argv, "SastDog\n");
@@ -40,18 +39,18 @@ int main(int argc, const char **argv) {
   spdlog::info("Path to configuration file: " + configFilePath);
 
   // 读取配置文件
-  auto config = Config::loadConfigFromFile(configFilePath);
+  auto config = SastConfig::loadConfigFromFile(configFilePath);
   if (!config) {
     spdlog::error("Failed to load config file");
     return 1;
   }
 
   checkerManager->init(config->getRulesVec());
-  
+
   // 根据项目路径找到compile_command.json文件
   std::string compileCommandDir = config->getProgramPath() + "/build";
 
-  std::string errorMsg;
+  std::string errorMsg = "";
   auto compilationDB = clang::tooling::CompilationDatabase::loadFromDirectory(
       compileCommandDir, errorMsg);
 

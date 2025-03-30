@@ -1,20 +1,20 @@
-#include "Config.h"
+#include "SastConfig.h"
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 
 using json = nlohmann::json;
 
-std::string Config::getProgramName() { return programName; }
+std::string SastConfig::getProgramName() { return programName; }
 
-std::string Config::getProgramPath() { return programPath; }
+std::string SastConfig::getProgramPath() { return programPath; }
 
-std::vector<std::string> Config::getRulesVec() { return rulesVec; }
+std::vector<std::string> SastConfig::getRulesVec() { return rulesVec; }
 
-std::vector<std::string> Config::getExcludePaths() { return excludePaths; }
+std::vector<std::string> SastConfig::getExcludePaths() { return excludePaths; }
 
-std::shared_ptr<Config>
-Config::loadConfigFromFile(const std::string &filePath) {
+std::shared_ptr<SastConfig>
+SastConfig::loadConfigFromFile(const std::string &filePath) {
   std::ifstream file(filePath);
   if (!file.is_open()) {
     spdlog::error("Failed to open config file: {}", filePath);
@@ -40,7 +40,7 @@ Config::loadConfigFromFile(const std::string &filePath) {
   std::vector<std::string> excludePaths =
       config["exclude_paths"].get<std::vector<std::string>>();
   // 创建 Config 对象
-  std::shared_ptr<Config> configObj = std::make_shared<Config>(
+  std::shared_ptr<SastConfig> configObj = std::make_shared<SastConfig>(
       programName, programPath, rulesVec, excludePaths);
   spdlog::info("Successfully load config from {}", filePath);
   spdlog::info("Program name: " + programName);

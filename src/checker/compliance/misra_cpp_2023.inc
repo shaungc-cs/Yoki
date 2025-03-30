@@ -1,0 +1,2 @@
+#include "MISRA_CPP2023_Rule_9_6_1.h"
+__REGISTER_CHECKER__(MISRA_CPP2023_Rule_9_6_1)

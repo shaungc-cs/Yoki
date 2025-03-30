@@ -55,13 +55,13 @@ target_link_libraries(${PROJECT_NAME}
   clangSerialization
   clangStaticAnalyzerCore
   clangStaticAnalyzerFrontend
-  config
+  sast_config
   utils
   analysis
   sast_dog_ast_frontend_action
 )
 
-add_subdirectory(config)
+add_subdirectory(sast_config)
 add_subdirectory(utils)
 # add_subdirectory(thread_pool)
 add_subdirectory(analysis)

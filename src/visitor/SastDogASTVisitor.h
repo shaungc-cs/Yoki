@@ -3,23 +3,19 @@
 
 #include <clang/AST/AST.h>
 #include <clang/AST/RecursiveASTVisitor.h>
-#include "CheckerManager.h"
 
 using namespace clang;
 
-
 class SastDogASTVisitor : public RecursiveASTVisitor<SastDogASTVisitor> {
-  public:
-    explicit SastDogASTVisitor(ASTContext *Context) : Context(Context) {}
+public:
+  explicit SastDogASTVisitor(ASTContext *context) : context(context) {}
 
-    #define __SAST_DOG_VISIT_NODE__(NODE) bool Visit##NODE(NODE *node);
-    #include "checkers.inc"
-    #undef __SAST_DOG_VISIT_NODE__
+#define __SAST_DOG_VISIT_NODE__(NODE) bool Visit##NODE(NODE *node);
+#include "visit_node.inc"
+#undef __SAST_DOG_VISIT_NODE__
 
-
-    private:
-    ASTContext *Context;
+private:
+  ASTContext *context;
 };
-
 
 #endif /* D55EFA00_8DA0_4BFB_8F83_6B87A49E69D7 */

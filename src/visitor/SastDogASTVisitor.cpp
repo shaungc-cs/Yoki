@@ -1,11 +1,11 @@
 #include "SastDogASTVisitor.h"
+#include "CheckerManager.h"
 
-
-#define __SAST_DOG_VISIT_NODE__(NODE) \
-  bool SastDogASTVisitor::Visit##NODE(NODE *node){ \
-    checkerManager->Visit##NODE(node, Context); \
-    return true; \
+#define __SAST_DOG_VISIT_NODE__(NODE)                                          \
+  bool SastDogASTVisitor::Visit##NODE(NODE *node) {                            \
+    checkerManager->Visit##NODE(node, context);                                \
+    return true;                                                               \
   }
 
-#include "checkers.inc"
+#include "visit_node.inc"
 #undef __SAST_DOG_VISIT_NODE__
