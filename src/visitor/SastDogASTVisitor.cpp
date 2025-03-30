@@ -1,8 +1,12 @@
 #include "SastDogASTVisitor.h"
 
-bool SastDogASTVisitor::VisitCXXMethodDecl(CXXMethodDecl *Method) {
-  if (Method->isThisDeclarationADefinition()) {
-    llvm::outs() << Method->getQualifiedNameAsString() << "\n";
+
+#define __SAST_DOG_VISIT_NODE__(NODE) \
+  bool SastDogASTVisitor::Visit##NODE(NODE *node){ \
+    node; \
+    return true; \
   }
-  return true;
-}
+
+#include "checkers.inc"
+#undef __SAST_DOG_VISIT_NODE__
+

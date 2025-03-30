@@ -9,7 +9,7 @@
 #include <spdlog/spdlog.h>
 #include <string>
 
-#include "Analyse.h"
+#include "Analysis.h"
 #include "Config.h"
 // #include "ThreadPool.h"
 #include "Utils.h"

@@ -10,17 +10,12 @@ class SastDogASTVisitor : public RecursiveASTVisitor<SastDogASTVisitor> {
   public:
     explicit SastDogASTVisitor(ASTContext *Context) : Context(Context) {}
 
-#ifndef VISITOR_VISIT_ASTNODE
-#define VISITOR_VISIT_ASTNODE(Node) \
-  bool Visit##Node(Node *node){ \
-    rulesManager.Visit##Node(node, Context); \
-    return true; \
-  } \
-#endif
-
+    #define __SAST_DOG_VISIT_NODE__(NODE) bool Visit##NODE(NODE *node);
+    #include "checkers.inc"
+    #undef __SAST_DOG_VISIT_NODE__
 
 
     private:
     ASTContext *Context;
-    RulesManager rulesManager = RulesManager::getInstance();
+    // RulesManager rulesManager = RulesManager::getInstance();
 };
