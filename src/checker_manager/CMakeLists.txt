@@ -1,8 +1,8 @@
-project(rules_manager)
+project(checker_manager)
 
 find_package(nlohmann_json REQUIRED)
 
-add_library(${PROJECT_NAME})
+add_library(${PROJECT_NAME} CheckerManager.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 
