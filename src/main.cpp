@@ -45,7 +45,7 @@ int main(int argc, const char **argv) {
     return 1;
   }
 
-  checkerManager->init(config->getRulesVec());
+  checkerManager->setUpEnabledCheckers(config->getRulesVec());
 
   // 根据项目路径找到compile_command.json文件
   std::string compileCommandDir = config->getProgramPath() + "/build";

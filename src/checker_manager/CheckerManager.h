@@ -9,7 +9,7 @@ public:
     return &instance;
   }
 
-  void init(std::vector<std::string> rulesVec);
+  void setUpEnabledCheckers(std::vector<std::string> rulesVec);
 
   bool registerChecker(CheckerBase *checker);
 
