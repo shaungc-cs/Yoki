@@ -20,4 +20,23 @@ bool CheckerManager::registerChecker(CheckerBase* checker) {
   #undef __SAST_DOG_VISIT_NODE__
 
 
+void CheckerManager::init(std::vector<std::string> rulesVec) {
+  #define __REGISTER_CHECKER__(CHECKER) \
+    registerChecker(new CHECKER()); \
+  #include "misra_cpp_2023.h"
+  #undef __REGISTER_CHECKER__
+
+  if(!rulesVec.empty()) {
+    std::vector<CheckerBase*> newCheckers;
+    for(auto rule : checkers) {
+      auto notMatch = std::find(rulesVec.begin(), rulesVec.end(), rule->name) != rulesVec.end();
+      if(notMatch) {
+        newCheckers.push_back(rule);
+      }
+    }
+
+    checkers = newCheckers;
+  }
+}
+
 CheckerManager* checkerManager = CheckerManager::getInstance();

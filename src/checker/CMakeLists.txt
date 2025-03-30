@@ -1,9 +1,7 @@
-project(analyse)
+project(checker)
 
-find_package(nlohmann_json REQUIRED)
+include_directories(${CMAKE_CURRENT_LIST_DIR})
 
-add_library(${PROJECT_NAME} Analyse.cpp)
-
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
-
-target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json::nlohmann_json)
+add_subdirectory(compliance)
+add_subdirectory(core)
+add_subdirectory(utils)

@@ -9,6 +9,9 @@ class CheckerManager{
     return &instance;
   }
 
+
+  void init(std::vector<std::string> rulesVec);
+
   bool registerChecker(CheckerBase* checker);
 
   #define __SAST_DOG_VISIT_NODE__(NODE) bool Visit##NODE(NODE *node, ASTContext *context);
@@ -24,8 +27,6 @@ class CheckerManager{
     CheckerManager& operator=(CheckerManager&&) = delete;
 
   std::vector<CheckerBase*> checkers;
-  // std::vector<CheckerItem*> checkerItems;
-
 };
 
 
