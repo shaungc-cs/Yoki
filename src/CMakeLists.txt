@@ -59,6 +59,7 @@ target_link_libraries(${PROJECT_NAME}
   utils
   analysis
   sast_dog_ast_frontend_action
+  defect
 )
 
 add_subdirectory(sast_config)

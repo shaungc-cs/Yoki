@@ -11,6 +11,7 @@
 
 #include "Analysis.h"
 #include "CheckerManager.h"
+#include "DefectManager.h"
 #include "SastConfig.h"
 #include "Utils.h"
 
@@ -44,6 +45,7 @@ int main(int argc, const char **argv) {
     spdlog::error("Failed to load config file");
     return 1;
   }
+  auto checkerManager = CheckerManager::getInstance();
 
   checkerManager->setUpEnabledCheckers(config->getRulesVec());
 
@@ -65,4 +67,18 @@ int main(int argc, const char **argv) {
       getFilesToBeChecked(compileCommandDir, config->getExcludePaths());
 
   Analyse::analyse(compilationDBPtr, fileVecToBeChecked);
+
+  auto defectManager = DefectManager::getInstance();
+  defectManager->setSastConfig(config);
+  defectManager->dumpAsJson();
+  defectManager->dumpAsHtml();
+
+  // 释放资源
+  CheckerManager::getInstance()->clearCheckers();
+  defectManager->clearDefects();
+  compilationDBPtr.reset();
+  fileVecToBeChecked.clear();
+  config.reset();
+  spdlog::info("SastDog finished running.");
+  return 0;
 }

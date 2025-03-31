@@ -9,6 +9,14 @@ bool CheckerManager::registerChecker(CheckerBase *checker) {
   return false;
 }
 
+bool CheckerManager::clearCheckers() {
+  for (auto checker : enabledCheckerVec) {
+    delete checker;
+  }
+  enabledCheckerVec.clear();
+  return true;
+}
+
 #define __SAST_DOG_VISIT_NODE__(NODE)                                          \
   bool CheckerManager::Visit##NODE(NODE *node, ASTContext *context) {          \
     for (auto checker : enabledCheckerVec) {                                   \
