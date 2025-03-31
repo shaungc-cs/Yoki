@@ -63,7 +63,7 @@ target_link_libraries(${PROJECT_NAME}
 
 add_subdirectory(sast_config)
 add_subdirectory(utils)
-# add_subdirectory(thread_pool)
+add_subdirectory(defect)
 add_subdirectory(analysis)
 # add_subdirectory(rules)
 add_subdirectory(visitor)
