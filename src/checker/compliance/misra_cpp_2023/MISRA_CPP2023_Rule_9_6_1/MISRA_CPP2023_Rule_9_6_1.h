@@ -4,6 +4,8 @@
 #include "CheckerBase.h"
 #include "CheckerManager.h"
 #include "CheckerUtils.h"
+#include "Defect.h"
+#include "DefectManager.h"
 #include <string>
 
 class MISRA_CPP2023_Rule_9_6_1 : public CheckerBase {
