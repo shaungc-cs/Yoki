@@ -1,4 +1,5 @@
 #include "DefectManager.h"
+#include <iostream>
 
 void DefectManager::insertDefect(const Defect &defect) {
   // 插入缺陷到管理器中
@@ -9,6 +10,9 @@ void DefectManager::dumpAsJson() {
   // 将缺陷信息以JSON格式输出
   for (const auto &defect : defects) {
     // 输出缺陷信息
+    std::cout << defect.getDefectId() << " "
+              << defect.getBelongingChecker()->getName() << " "
+              << defect.getDefectMessage() << " " << std::endl;
   }
 }
 
