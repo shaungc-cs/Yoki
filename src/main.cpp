@@ -68,6 +68,8 @@ int main(int argc, const char **argv) {
 
   Analyse::analyse(compilationDBPtr, fileVecToBeChecked);
 
+  spdlog::info("Size of defects: {}", DefectManager::getInstance()->size());
+
   auto defectManager = DefectManager::getInstance();
   defectManager->setSastConfig(config);
   defectManager->dumpAsJson();

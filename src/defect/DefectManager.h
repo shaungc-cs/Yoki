@@ -23,9 +23,9 @@ public:
     sastConfig = config;
   }
 
-  void clearDefects() {
-    defects.clear();
-  }
+  void clearDefects() { defects.clear(); }
+
+  int size() const { return defects.size(); }
 
 private:
   // 禁用拷贝构造函数和赋值运算符
