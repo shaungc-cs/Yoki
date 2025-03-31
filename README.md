@@ -1,2 +1,2 @@
 # sast_dog
-SAST demo
+SastDog is a static code analysis tool based on libtooling from LLVM.
