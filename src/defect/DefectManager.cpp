@@ -1,7 +1,9 @@
 #include "DefectManager.h"
 #include <iostream>
 
-void DefectManager::insertDefect(const Defect &defect) {
+void DefectManager::addDefect(const Defect &defect) {
+  // 锁定互斥量，确保线程安全
+  std::lock_guard<std::mutex> lock(defectMutex);
   // 插入缺陷到管理器中
   defects.push_back(defect);
 }

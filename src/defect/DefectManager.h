@@ -2,6 +2,7 @@
 #define C2BDBA7D_F7A1_40EE_8204_DF629E3FB04E
 #include "Defect.h"
 #include <memory>
+#include <mutex>
 #include <vector>
 
 #include "SastConfig.h"
@@ -13,7 +14,7 @@ public:
     return &instance;
   }
 
-  void insertDefect(const Defect &defect);
+  void addDefect(const Defect &defect);
 
   void dumpAsJson();
 
@@ -36,6 +37,8 @@ private:
   std::vector<Defect> defects{1000};
 
   std::shared_ptr<SastConfig> sastConfig = nullptr;
+
+  std::mutex defectMutex;
 };
 
 #endif /* C2BDBA7D_F7A1_40EE_8204_DF629E3FB04E */

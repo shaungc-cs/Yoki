@@ -6,7 +6,7 @@ bool MISRA_CPP2023_Rule_9_6_1::VisitGotoStmt(GotoStmt *node,
   auto defectMessage = "A goto statement shall not be used.";
   auto id = generateHashID(defectMessage);
   Defect defect(id, this, defectMessage, node->getSourceRange());
-  DefectManager::getInstance()->insertDefect(defect);
+  DefectManager::getInstance()->addDefect(defect);
 
   return true;
 }
