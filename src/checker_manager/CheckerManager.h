@@ -9,11 +9,15 @@ public:
     return &instance;
   }
 
+  int size() const { return enabledCheckerVec.size(); }
+
   void setUpEnabledCheckers(std::vector<std::string> rulesVec);
 
   bool registerChecker(CheckerBase *checker);
 
   bool clearCheckers();
+
+  std::vector<CheckerBase *> getEnabledCheckers() { return enabledCheckerVec; }
 
 #define __SAST_DOG_VISIT_NODE__(NODE)                                          \
   bool Visit##NODE(NODE *node, ASTContext *context);

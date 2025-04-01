@@ -60,6 +60,7 @@ target_link_libraries(${PROJECT_NAME}
   analysis
   sast_dog_ast_frontend_action
   defect
+  MISRA_CPP2023_Rule_9_6_1
 )
 
 add_subdirectory(sast_config)
