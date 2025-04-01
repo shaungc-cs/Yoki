@@ -43,5 +43,3 @@ void CheckerManager::setUpEnabledCheckers(std::vector<std::string> rulesVec) {
     enabledCheckerVec = newCheckers;
   }
 }
-
-CheckerManager *checkerManager = CheckerManager::getInstance();

@@ -3,6 +3,7 @@
 #include <atomic>
 #include <clang/Tooling/CompilationDatabase.h>
 #include <clang/Tooling/Tooling.h>
+#include <mutex>
 #include <spdlog/spdlog.h>
 #include <string>
 #include <thread>
@@ -24,17 +25,16 @@ void Analyse::analyse(std::shared_ptr<CompilationDatabase> compilationDB,
 
   std::vector<std::thread> workerPool;
   auto threadSize = Analyse::getThreadSize();
+  spdlog::info("Thread size: {}", threadSize);
 
   std::mutex mtx;
-  int proceedFileCount = 0;
+  std::atomic<int> proceedFileCount(0);
 
   for (int i = 0; i < threadSize; ++i) {
-    workerPool.emplace_back(std::thread([&] {
-      Analyse::doAnalyse(compilationDB, fileVec, mtx, proceedFileCount);
-    }));
+    workerPool.emplace_back(std::thread(
+        [&] { Analyse::doAnalyse(compilationDB, fileVec, proceedFileCount); }));
   }
 
-  // Wait for all threads to finish their jobs.
   for (std::thread &worker : workerPool) {
     if (worker.joinable()) {
       worker.join();
@@ -43,23 +43,25 @@ void Analyse::analyse(std::shared_ptr<CompilationDatabase> compilationDB,
 }
 
 void Analyse::doAnalyse(std::shared_ptr<CompilationDatabase> compilationDB,
-                        std::vector<std::string> fileVec, std::mutex &mtx,
-                        int proceedFileCount) {
+                        std::vector<std::string> fileVec,
+                        std::atomic<int> &proceedFileCount) {
+
   auto allFileSize = (int)fileVec.size();
 
   while (true) {
-    std::vector<std::string> currentFileVec;
-    std::string file;
-    {
-      std::unique_lock<std::mutex> lock(mtx);
-      if (proceedFileCount >= allFileSize) {
-        break; // No more files to process
-      }
-      file = fileVec[proceedFileCount++];
+    int currentIndex = proceedFileCount.fetch_add(1);
+    if (currentIndex >= allFileSize) {
+      break; // No more files to process
     }
 
-    currentFileVec.push_back(file);
+    std::string file = fileVec[currentIndex];
 
+    spdlog::info("Thread {} is processing file: {}",
+                 std::to_string(
+                     std::hash<std::thread::id>{}(std::this_thread::get_id())),
+                 file);
+
+    std::vector<std::string> currentFileVec = {file};
     ClangTool Tool(*compilationDB, currentFileVec);
     Tool.run(newFrontendActionFactory<SastDogASTFrontendAction>().get());
   }

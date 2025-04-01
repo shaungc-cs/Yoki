@@ -45,12 +45,10 @@ int main(int argc, const char **argv) {
     spdlog::error("Failed to load config file");
     return 1;
   }
-  auto checkerManager = CheckerManager::getInstance();
-
-  checkerManager->setUpEnabledCheckers(config->getRulesVec());
 
   // 根据项目路径找到compile_command.json文件
   std::string compileCommandDir = config->getProgramPath() + "/build";
+  spdlog::info("Compile command directory: " + compileCommandDir);
 
   std::string errorMsg = "";
   auto compilationDB = clang::tooling::CompilationDatabase::loadFromDirectory(
@@ -60,13 +58,27 @@ int main(int argc, const char **argv) {
     spdlog::error("Failed to load compile_commands.json: {}", errorMsg);
     return 1;
   }
+  spdlog::info("Loaded compile_commands.json successfully.");
 
   std::shared_ptr compilationDBPtr = std::move(compilationDB);
 
   auto fileVecToBeChecked =
       getFilesToBeChecked(compileCommandDir, config->getExcludePaths());
+  if (fileVecToBeChecked.empty()) {
+    spdlog::error("No files to be checked.");
+    return 1;
+  }
+  spdlog::info("Files to be checked: " +
+               std::to_string(fileVecToBeChecked.size()));
+  for (const auto &file : fileVecToBeChecked) {
+    spdlog::info("  -- " + file);
+  }
 
   Analyse::analyse(compilationDBPtr, fileVecToBeChecked);
+
+  // 设置开启的检查器
+  auto checkerManager = CheckerManager::getInstance();
+  checkerManager->setUpEnabledCheckers(config->getRulesVec());
 
   spdlog::info("Size of defects: {}", DefectManager::getInstance()->size());
 

@@ -47,11 +47,11 @@ SastConfig::loadConfigFromFile(const std::string &filePath) {
   spdlog::info("Program path: " + programPath);
   spdlog::info("Rules enabled: ");
   for (const auto &rule : rulesVec) {
-    spdlog::info("  --" + rule);
+    spdlog::info("  -- " + rule);
   }
   spdlog::info("Exclude paths: ");
   for (const auto &path : excludePaths) {
-    spdlog::info("  --" + path);
+    spdlog::info("  -- " + path);
   }
   // 关闭文件
   file.close();
