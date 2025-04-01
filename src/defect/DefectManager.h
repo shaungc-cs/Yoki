@@ -32,9 +32,9 @@ private:
   // 禁用拷贝构造函数和赋值运算符
   DefectManager(const DefectManager &) = delete;
   DefectManager &operator=(const DefectManager &) = delete;
-  DefectManager() = default;
+  DefectManager() { defects.reserve(1000); }
   ~DefectManager() = default;
-  std::vector<Defect> defects{1000};
+  std::vector<Defect> defects;
 
   std::shared_ptr<SastConfig> sastConfig = nullptr;
 

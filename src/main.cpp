@@ -12,6 +12,7 @@
 #include "Analysis.h"
 #include "CheckerManager.h"
 #include "DefectManager.h"
+#include "MISRA_CPP2023_Rule_9_6_1.h"
 #include "SastConfig.h"
 #include "Utils.h"
 
@@ -74,11 +75,16 @@ int main(int argc, const char **argv) {
     spdlog::info("  -- " + file);
   }
 
-  Analyse::analyse(compilationDBPtr, fileVecToBeChecked);
-
   // 设置开启的检查器
   auto checkerManager = CheckerManager::getInstance();
+  checkerManager->registerChecker(
+      new MISRA_CPP2023_Rule_9_6_1("MISRA_CPP:Rule 9.6.1",
+                                   "A goto statement "
+                                   "shall not be used.",
+                                   CheckerCategory::ADVISORY));
   checkerManager->setUpEnabledCheckers(config->getRulesVec());
+
+  Analyse::analyse(compilationDBPtr, fileVecToBeChecked);
 
   spdlog::info("Size of defects: {}", DefectManager::getInstance()->size());
 

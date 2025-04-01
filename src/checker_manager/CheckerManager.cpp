@@ -1,8 +1,10 @@
 #include "CheckerManager.h"
 #include "CheckerUtils.h"
+#include <spdlog/spdlog.h>
 
 bool CheckerManager::registerChecker(CheckerBase *checker) {
   if (checker) {
+    spdlog::info("Register checker: {}", checker->getName());
     enabledCheckerVec.push_back(checker);
     return true;
   }

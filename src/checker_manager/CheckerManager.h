@@ -21,7 +21,7 @@ public:
 #undef __SAST_DOG_VISIT_NODE__
 
 private:
-  CheckerManager() = default;
+  CheckerManager() { enabledCheckerVec.reserve(1000); }
   ~CheckerManager() = default;
   CheckerManager(const CheckerManager &) = delete;
   CheckerManager &operator=(const CheckerManager &) = delete;
