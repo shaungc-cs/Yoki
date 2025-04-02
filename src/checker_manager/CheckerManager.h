@@ -15,8 +15,6 @@ public:
 
   void setUpEnabledCheckers(std::vector<std::string> rulesVec);
 
-  bool registerChecker(CheckerBase *checker);
-
   bool clearCheckers();
 
   std::vector<CheckerBase *> getEnabledCheckers() { return enabledCheckerVec; }

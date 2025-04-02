@@ -45,10 +45,6 @@ int main(int argc, const char **argv) {
 
   // 读取配置文件
   auto config = SastConfig::loadConfigFromFile(configFilePath);
-  if (!config) {
-    spdlog::error("Failed to load config file");
-    return 1;
-  }
 
   // 根据配置文件中的项目路径找到compile_command.json文件
   std::string compileCommandDir = config->getProgramPath() + "/build";

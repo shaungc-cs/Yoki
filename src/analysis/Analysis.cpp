@@ -25,7 +25,7 @@ void Analyse::analyse(std::shared_ptr<CompilationDatabase> compilationDB,
 
   std::vector<std::thread> workerPool;
   auto threadSize = Analyse::getThreadSize();
-  spdlog::info("Thread size: {}", threadSize);
+  spdlog::info("Analyse using {} thread", threadSize);
 
   std::mutex mtx;
   std::atomic<int> proceedFileCount(0);
@@ -51,7 +51,7 @@ void Analyse::doAnalyse(std::shared_ptr<CompilationDatabase> compilationDB,
   while (true) {
     int currentIndex = proceedFileCount.fetch_add(1);
     if (currentIndex >= allFileSize) {
-      break; // No more files to process
+      break;
     }
 
     std::string file = fileVec[currentIndex];

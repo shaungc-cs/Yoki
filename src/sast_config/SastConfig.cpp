@@ -21,10 +21,10 @@ SastConfig::loadConfigFromFile(const std::string &filePath) {
     return nullptr;
   }
 
-  // 解析 JSON 文件
   json config;
   file >> config;
 
+  // 文件格式
   // {
   //   "program_name" : "Program Name",
   //   "program_path" : "path/to/program",
@@ -39,19 +39,21 @@ SastConfig::loadConfigFromFile(const std::string &filePath) {
       config["rules_enabled"].get<std::vector<std::string>>();
   std::vector<std::string> excludePaths =
       config["exclude_paths"].get<std::vector<std::string>>();
+
   // 创建 Config 对象
   std::shared_ptr<SastConfig> configObj = std::make_shared<SastConfig>(
       programName, programPath, rulesVec, excludePaths);
+
   spdlog::info("Successfully load config from {}", filePath);
   spdlog::info("Program name: " + programName);
   spdlog::info("Program path: " + programPath);
   spdlog::info("Rules enabled: ");
   for (const auto &rule : rulesVec) {
-    spdlog::info("  -- " + rule);
+    spdlog::info("  ---- " + rule);
   }
   spdlog::info("Exclude paths: ");
   for (const auto &path : excludePaths) {
-    spdlog::info("  -- " + path);
+    spdlog::info("  ---- " + path);
   }
   // 关闭文件
   file.close();

@@ -22,14 +22,10 @@ getFilesToBeChecked(const std::string &compileCommandDir,
                   compileCommandFilePath);
     return fileVecToBeChecked;
   }
-  // 解析 JSON 文件
   nlohmann::json jsonData;
   file >> jsonData;
-  // 遍历 JSON 数组
   for (const auto &entry : jsonData) {
-    // 获取文件路径
     std::string filePath = entry["file"];
-    // 检查文件路径是否在排除列表中
     bool exclude = false;
     for (const auto &excludePtn : excludePatterns) {
       if (std::regex_search(filePath, excludePtn)) {

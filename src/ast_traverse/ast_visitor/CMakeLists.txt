@@ -1,14 +1,12 @@
-project(analysis)
+project(ast_visitor)
 
-find_package(spdlog REQUIRED)
-
-add_library(${PROJECT_NAME} Analysis.cpp)
+add_library(${PROJECT_NAME} SastDogASTVisitor.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 
 target_link_libraries(
   ${PROJECT_NAME}
   PUBLIC
-  spdlog::spdlog
-  ast_frontend_action
+  common
+  checker_manager
 )

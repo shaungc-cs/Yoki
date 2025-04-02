@@ -41,34 +41,33 @@ target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-  clangTooling
-  clangFrontend
+  analysis
+  ast_frontend_action
+  clangAnalysis
   clangAST
   clangBasic
   clangDriver
+  clangEdit
+  clangFrontend
   clangLex
   clangParse
-  clangSema
-  clangEdit
   clangRewrite
-  clangAnalysis
+  clangSema
   clangSerialization
   clangStaticAnalyzerCore
   clangStaticAnalyzerFrontend
+  clangTooling
+  defect
   sast_config
   utils
-  analysis
-  sast_dog_ast_frontend_action
-  defect
 )
 
-add_subdirectory(sast_config)
-add_subdirectory(utils)
-add_subdirectory(defect)
 add_subdirectory(analysis)
-add_subdirectory(visitor)
-add_subdirectory(frontend_action)
-add_subdirectory(consumer)
-add_subdirectory(common)
+add_subdirectory(ast_traverse)
 add_subdirectory(checker_manager)
 add_subdirectory(checker)
+add_subdirectory(common)
+add_subdirectory(defect_manager)
+add_subdirectory(defect)
+add_subdirectory(sast_config)
+add_subdirectory(utils)

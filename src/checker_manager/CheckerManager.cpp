@@ -12,15 +12,6 @@ void CheckerManager::initializeCheckers() {
 #include "misra_cpp2023/misra_cpp2023.inc";
 }
 
-bool CheckerManager::registerChecker(CheckerBase *checker) {
-  if (checker) {
-    spdlog::info("Register checker: {}", checker->getName());
-    enabledCheckerVec.push_back(checker);
-    return true;
-  }
-  return false;
-}
-
 bool CheckerManager::clearCheckers() {
   for (auto checker : enabledCheckerVec) {
     delete checker;
@@ -44,11 +35,15 @@ bool CheckerManager::clearCheckers() {
 void CheckerManager::setUpEnabledCheckers(std::vector<std::string> rulesVec) {
   if (!rulesVec.empty()) {
     std::vector<CheckerBase *> newCheckers;
-    for (auto rule : enabledCheckerVec) {
-      auto notMatch = std::find(rulesVec.begin(), rulesVec.end(),
-                                rule->getName()) != rulesVec.end();
-      if (notMatch) {
-        newCheckers.push_back(rule);
+
+    for (auto name : rulesVec) {
+      auto it = std::find_if(
+          enabledCheckerVec.begin(), enabledCheckerVec.end(),
+          [&name](CheckerBase *checker) { return checker->getName() == name; });
+      if (it != enabledCheckerVec.end()) {
+        newCheckers.push_back(*it);
+      } else {
+        spdlog::warn("Checker {} not found", name);
       }
     }
 

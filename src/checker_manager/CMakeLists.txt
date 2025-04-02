@@ -7,12 +7,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 target_link_libraries(
   ${PROJECT_NAME}
   PUBLIC
-  spdlog::spdlog
-  helper
-  compliance
+  checker_base
   checker_utils
+  compliance
   defect
   misra_cpp2023
+  spdlog::spdlog
 )
-
-add_subdirectory(helper)

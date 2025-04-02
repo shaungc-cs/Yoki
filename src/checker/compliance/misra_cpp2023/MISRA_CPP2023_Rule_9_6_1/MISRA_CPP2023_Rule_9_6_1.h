@@ -2,7 +2,6 @@
 #define F1729055_B7A2_4489_801D_E8E070E34152
 
 #include "CheckerBase.h"
-#include "CheckerManager.h"
 #include "CheckerUtils.h"
 #include "Defect.h"
 #include "DefectManager.h"
