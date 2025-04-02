@@ -10,7 +10,7 @@ using namespace clang;
 class CheckerBase {
 public:
   CheckerBase(std::string name, std::string description,
-              CheckerCategory category)
+              CheckerSeverity category)
       : name(name), description(description), category(category) {}
 
 #define __SAST_DOG_VISIT_NODE__(NODE)                                          \
@@ -23,14 +23,14 @@ public:
   void setDescription(const std::string &description) {
     this->description = description;
   }
-  void setCategory(CheckerCategory category) { this->category = category; }
+  void setCategory(CheckerSeverity category) { this->category = category; }
   const std::string &getName() const { return name; }
   const std::string &getDescription() const { return description; }
-  CheckerCategory getCategory() const { return category; }
+  CheckerSeverity getCategory() const { return category; }
 
 private:
   std::string name;
   std::string description;
-  CheckerCategory category;
+  CheckerSeverity category;
 };
 #endif /* C2F9D896_D044_4D91_8D6A_DD4BD6DE3ED6 */

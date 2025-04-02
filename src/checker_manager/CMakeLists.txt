@@ -11,7 +11,7 @@ target_link_libraries(
   helper
   compliance
   checker_utils
-  MISRA_CPP2023_Rule_9_6_1
+  misra_cpp2023
 )
 
 add_subdirectory(helper)

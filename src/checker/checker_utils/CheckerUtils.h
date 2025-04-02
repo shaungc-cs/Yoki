@@ -10,20 +10,20 @@
 
 #define __CHECKER_CTOR__(checker_name)                                         \
   checker_name(std::string name, std::string description,                      \
-               CheckerCategory category)                                       \
+               CheckerSeverity category)                                       \
       : CheckerBase(name, description, category) {}
 
-#define __REGISTER_CHECKER__(CLASS_NAME, CHECKER_NAME, DESC, CATEGORY)         \
-  class CLASS_NAME##Registrar {                                                \
-  public:                                                                      \
-    CLASS_NAME##Registrar() {                                                  \
-      CheckerManager::getInstance()->registerChecker(                          \
-          new CLASS_NAME(CHECKER_NAME, DESC, CheckerCategory::CATEGORY));      \
-    }                                                                          \
-  };                                                                           \
-  static CLASS_NAME##Registrar registrar;
+// #define __REGISTER_CHECKER__(CLASS_NAME, CHECKER_NAME, DESC, CATEGORY)         \
+//   class CLASS_NAME##Registrar {                                                \
+//   public:                                                                      \
+//     CLASS_NAME##Registrar() {                                                  \
+//       CheckerManager::getInstance()->registerChecker(                          \
+//           new CLASS_NAME(CHECKER_NAME, DESC, CheckerSeverity::CATEGORY));      \
+//     }                                                                          \
+//   };                                                                           \
+//   static CLASS_NAME##Registrar registrar;
 
-enum class CheckerCategory { ADVISORY, REQUIRED, MANDATORY };
+enum class CheckerSeverity { ADVISORY, REQUIRED, MANDATORY };
 
 // 将一个整数转为十六进制字符串
 std::string intToHex(int value);

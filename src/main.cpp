@@ -15,6 +15,8 @@
 #include "SastConfig.h"
 #include "Utils.h"
 
+// #include "compliance_common_include.h"
+
 using namespace clang;
 using namespace clang::tooling;
 
@@ -76,6 +78,7 @@ int main(int argc, const char **argv) {
 
   // 设置开启的检查器
   auto checkerManager = CheckerManager::getInstance();
+  checkerManager->initializeCheckers();
   checkerManager->setUpEnabledCheckers(config->getRulesVec());
 
   spdlog::error(checkerManager->size());

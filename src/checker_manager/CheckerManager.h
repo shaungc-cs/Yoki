@@ -9,6 +9,8 @@ public:
     return &instance;
   }
 
+  void initializeCheckers();
+
   int size() const { return enabledCheckerVec.size(); }
 
   void setUpEnabledCheckers(std::vector<std::string> rulesVec);
