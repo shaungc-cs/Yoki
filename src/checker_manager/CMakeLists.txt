@@ -11,6 +11,7 @@ target_link_libraries(
   helper
   compliance
   checker_utils
+  defect
   misra_cpp2023
 )
 

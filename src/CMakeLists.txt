@@ -60,7 +60,6 @@ target_link_libraries(${PROJECT_NAME}
   analysis
   sast_dog_ast_frontend_action
   defect
-  compliance
 )
 
 add_subdirectory(sast_config)

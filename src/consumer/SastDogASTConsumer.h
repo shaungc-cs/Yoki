@@ -10,7 +10,6 @@ class SastDogASTConsumer : public clang::ASTConsumer {
 public:
   explicit SastDogASTConsumer(ASTContext *context) : visitor(context) {}
   virtual void HandleTranslationUnit(clang::ASTContext &context) {
-    spdlog::info("Consumer starts to handle translation unit");
     visitor.TraverseDecl(context.getTranslationUnitDecl());
   }
 

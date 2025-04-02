@@ -2,24 +2,14 @@
 #include "CheckerUtils.h"
 #include <spdlog/spdlog.h>
 
-// #define STRINGIFY(x) #x
-// #define TOSTRING(x) STRINGIFY(x)
-
-// #define __REGISTER_CHECKER__(STANDARD_NAME, CLASS_NAME, CHECKER_NAME, DESC,    \
-//                              SEVERITY)                                         \
-//   TOSTRING(include STANDARD_NAME / CLASS_NAME.h)
-// #include "misra_cpp2023/misra_cpp2023.inc";
-// #undef __REGISTER_CHECKER__
-// #undef TOSTRING
-// #undef STRINGIFY
+#include "compliance_public_header.h"
 
 void CheckerManager::initializeCheckers() {
-
-  // #define __REGISTER_CHECKER__(STANDARD_NAME, CLASS_NAME, CHECKER_NAME, DESC,    \
-//                              SEVERITY)                                         \
-//   enabledCheckerVec.push_back(                                                 \
-//       new CLASS_NAME(CHECKER_NAME, DESC, CheckerSeverity::SEVERITY));
-  // #include "misra_cpp2023/misra_cpp2023.inc";
+#define __REGISTER_CHECKER__(STANDARD_NAME, CLASS_NAME, CHECKER_NAME, DESC,    \
+                             SEVERITY)                                         \
+  enabledCheckerVec.push_back(                                                 \
+      new CLASS_NAME(CHECKER_NAME, DESC, CheckerSeverity::SEVERITY));
+#include "misra_cpp2023/misra_cpp2023.inc";
 }
 
 bool CheckerManager::registerChecker(CheckerBase *checker) {
