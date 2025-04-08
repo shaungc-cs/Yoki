@@ -15,7 +15,7 @@
   ]
 }
 ```
-program_name：待检测的工程名
-program_path：待检测的工程文件所在路径
-rules_enabled：开启的规则集。若为空则默认开启所有
-exclude_paths：排出的文件路径
+* program_name：待检测的工程名
+* program_path：待检测的工程文件所在路径
+* rules_enabled：开启的规则集。若为空则默认开启所有
+* exclude_paths：排出的文件路径
