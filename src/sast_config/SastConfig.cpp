@@ -1,5 +1,6 @@
 #include "SastConfig.h"
 #include <fstream>
+#include <memory>
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 
@@ -13,7 +14,7 @@ std::vector<std::string> SastConfig::getRulesVec() { return rulesVec; }
 
 std::vector<std::string> SastConfig::getExcludePaths() { return excludePaths; }
 
-std::shared_ptr<SastConfig>
+std::unique_ptr<SastConfig>
 SastConfig::loadConfigFromFile(const std::string &filePath) {
   std::ifstream file(filePath);
   if (!file.is_open()) {
@@ -41,7 +42,7 @@ SastConfig::loadConfigFromFile(const std::string &filePath) {
       config["exclude_paths"].get<std::vector<std::string>>();
 
   // 创建 Config 对象
-  std::shared_ptr<SastConfig> configObj = std::make_shared<SastConfig>(
+  std::unique_ptr<SastConfig> configObj = std::make_unique<SastConfig>(
       programName, programPath, rulesVec, excludePaths);
 
   spdlog::info("Successfully load config from {}", filePath);
@@ -57,5 +58,6 @@ SastConfig::loadConfigFromFile(const std::string &filePath) {
   }
   // 关闭文件
   file.close();
+  // 返回unique_ptr对象的时候可以不显式使用move语句，编译器会处理
   return configObj;
 }

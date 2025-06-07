@@ -1,6 +1,10 @@
 project(SastDog)
 
 # 优先使用 vcpkg 安装的包
+if(NOT DEFINED ENV{CMAKE_PREFIX_PATH})
+    message(FATAL_ERROR "CMAKE_PREFIX_PATH environment variable is not set.")
+endif()
+
 list(APPEND CMAKE_PREFIX_PATH "${VCPKG_ROOT}/installed/x64-linux")
 
 # 查找 LLVM 和 Clang 包
@@ -34,6 +38,8 @@ set (clang_paths
 find_package(Clang REQUIRED CONFIG PATHS "${clang_paths}")
 
 find_package(spdlog REQUIRED)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_executable(${PROJECT_NAME} main.cpp)
 

@@ -12,9 +12,9 @@ class Analyse {
 public:
   static int getThreadSize();
   static void analyse(std::shared_ptr<CompilationDatabase> compilationDB,
-                      std::vector<std::string> fileVec);
+                      const std::vector<std::string> &fileVec);
   static void doAnalyse(std::shared_ptr<CompilationDatabase> compilationDB,
-                        std::vector<std::string> fileVec,
+                        const std::vector<std::string> &fileVec,
                         std::atomic<int> &proceedFileCount);
 };
 

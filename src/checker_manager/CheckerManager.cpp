@@ -13,10 +13,10 @@ void CheckerManager::initializeCheckers() {
 }
 
 bool CheckerManager::clearCheckers() {
-  for (auto checker : enabledCheckerVec) {
+  for (auto checker : supportCheckerVec) {
     delete checker;
   }
-  enabledCheckerVec.clear();
+  supportCheckerVec.clear();
   return true;
 }
 
@@ -32,21 +32,22 @@ bool CheckerManager::clearCheckers() {
 #include "visit_node.inc"
 #undef __SAST_DOG_VISIT_NODE__
 
-void CheckerManager::setUpEnabledCheckers(std::vector<std::string> rulesVec) {
+void CheckerManager::setUpEnabledCheckers(
+    const std::vector<std::string> &rulesVec) {
   if (!rulesVec.empty()) {
-    std::vector<CheckerBase *> newCheckers;
+    std::vector<CheckerBase *> activeCheckers;
 
-    for (auto name : rulesVec) {
+    for (const auto &name : rulesVec) {
       auto it = std::find_if(
-          enabledCheckerVec.begin(), enabledCheckerVec.end(),
+          supportCheckerVec.begin(), supportCheckerVec.end(),
           [&name](CheckerBase *checker) { return checker->getName() == name; });
-      if (it != enabledCheckerVec.end()) {
-        newCheckers.push_back(*it);
+      if (it != supportCheckerVec.end()) {
+        activeCheckers.push_back(*it);
       } else {
         spdlog::warn("Checker {} not found", name);
       }
     }
 
-    enabledCheckerVec = newCheckers;
+    supportCheckerVec = activeCheckers;
   }
 }

@@ -11,12 +11,13 @@ public:
 
   void initializeCheckers();
 
-  int size() const { return enabledCheckerVec.size(); }
+  int size() const { return supportCheckerVec.size(); }
 
-  void setUpEnabledCheckers(std::vector<std::string> rulesVec);
+  void setUpEnabledCheckers(const std::vector<std::string> &rulesVec);
 
   bool clearCheckers();
 
+  std::vector<CheckerBase *> getSupportCheckers() { return supportCheckerVec; }
   std::vector<CheckerBase *> getEnabledCheckers() { return enabledCheckerVec; }
 
 #define __SAST_DOG_VISIT_NODE__(NODE)                                          \
@@ -25,13 +26,14 @@ public:
 #undef __SAST_DOG_VISIT_NODE__
 
 private:
-  CheckerManager() { enabledCheckerVec.reserve(1000); }
+  CheckerManager() { supportCheckerVec.reserve(1000); }
   ~CheckerManager() = default;
   CheckerManager(const CheckerManager &) = delete;
   CheckerManager &operator=(const CheckerManager &) = delete;
   CheckerManager(CheckerManager &&) = delete;
   CheckerManager &operator=(CheckerManager &&) = delete;
 
+  std::vector<CheckerBase *> supportCheckerVec;
   std::vector<CheckerBase *> enabledCheckerVec;
 };
 

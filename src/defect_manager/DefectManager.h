@@ -20,8 +20,8 @@ public:
 
   void dumpAsHtml();
 
-  void setSastConfig(std::shared_ptr<SastConfig> config) {
-    sastConfig = config;
+  void setSastConfig(std::unique_ptr<SastConfig> &&config) {
+    sastConfig = std::move(config);
   }
 
   void clearDefects() { defects.clear(); }
@@ -36,7 +36,7 @@ private:
   ~DefectManager() = default;
   std::vector<Defect> defects;
 
-  std::shared_ptr<SastConfig> sastConfig = nullptr;
+  std::unique_ptr<SastConfig> sastConfig = nullptr;
 
   std::mutex defectMutex;
 };

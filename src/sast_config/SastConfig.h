@@ -18,7 +18,7 @@ public:
   std::vector<std::string> getRulesVec();
   std::vector<std::string> getExcludePaths();
 
-  static std::shared_ptr<SastConfig>
+  static std::unique_ptr<SastConfig>
   loadConfigFromFile(const std::string &filePath);
 
 private:

@@ -21,10 +21,12 @@ int Analyse::getThreadSize() {
 }
 
 void Analyse::analyse(std::shared_ptr<CompilationDatabase> compilationDB,
-                      std::vector<std::string> fileVec) {
+                      const std::vector<std::string> &fileVec) {
 
   std::vector<std::thread> workerPool;
+
   auto threadSize = Analyse::getThreadSize();
+
   spdlog::info("Analyse using {} thread", threadSize);
 
   std::mutex mtx;
@@ -43,7 +45,7 @@ void Analyse::analyse(std::shared_ptr<CompilationDatabase> compilationDB,
 }
 
 void Analyse::doAnalyse(std::shared_ptr<CompilationDatabase> compilationDB,
-                        std::vector<std::string> fileVec,
+                        const std::vector<std::string> &fileVec,
                         std::atomic<int> &proceedFileCount) {
 
   auto allFileSize = (int)fileVec.size();
