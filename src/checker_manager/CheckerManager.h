@@ -1,8 +1,9 @@
 #ifndef E27B18B3_6DD1_45E2_BCFC_BD7AF2D2CBB8
 #define E27B18B3_6DD1_45E2_BCFC_BD7AF2D2CBB8
-#include "CheckerBase.h"
-class CheckerManager {
 
+#include "CheckerBase.h"
+
+class CheckerManager {
 public:
   static CheckerManager &getInstance() {
     static CheckerManager instance;
@@ -37,8 +38,8 @@ private:
   CheckerManager(CheckerManager &&) = delete;
   CheckerManager &operator=(CheckerManager &&) = delete;
 
-  std::vector<CheckerBase> supportCheckerVec;
-  std::vector<CheckerBase> enabledCheckerVec;
+  std::vector<CheckerBase> supportCheckerVec{};
+  std::vector<CheckerBase> enabledCheckerVec{};
 };
 
 #endif /* E27B18B3_6DD1_45E2_BCFC_BD7AF2D2CBB8 */

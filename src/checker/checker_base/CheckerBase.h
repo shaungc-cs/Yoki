@@ -5,6 +5,7 @@
 #include <clang/AST/AST.h>
 #include <clang/AST/ASTContext.h>
 #include <clang/AST/RecursiveASTVisitor.h>
+
 using namespace clang;
 
 class CheckerBase {
