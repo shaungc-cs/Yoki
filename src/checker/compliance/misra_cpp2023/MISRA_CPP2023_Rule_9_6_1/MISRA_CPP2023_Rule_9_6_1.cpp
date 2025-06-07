@@ -1,5 +1,8 @@
 #include "MISRA_CPP2023_Rule_9_6_1.h"
+#include "Defect.h"
+#include "DefectManager.h"
 #include <spdlog/spdlog.h>
+#include <string>
 
 bool MISRA_CPP2023_Rule_9_6_1::VisitGotoStmt(GotoStmt *node,
                                              ASTContext *context) {

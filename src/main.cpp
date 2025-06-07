@@ -79,8 +79,8 @@ int main(int argc, const char **argv) {
   spdlog::info("Enabled checkers: " +
                std::to_string(checkerManager.getEnabledCheckers().size()));
   // 输出启用的检查器列表
-  for (auto checker : checkerManager.getEnabledCheckers()) {
-    spdlog::info("---- {}", checker->getName());
+  for (auto &checker : checkerManager.getEnabledCheckers()) {
+    spdlog::info("---- {}", checker.getName());
   }
 
   // 加载compile_commands.json文件生成CompilationDatabase

@@ -17,8 +17,12 @@ public:
 
   bool clearCheckers();
 
-  std::vector<CheckerBase *> getSupportCheckers() { return supportCheckerVec; }
-  std::vector<CheckerBase *> getEnabledCheckers() { return enabledCheckerVec; }
+  const std::vector<CheckerBase> &getSupportCheckers() const {
+    return supportCheckerVec;
+  }
+  const std::vector<CheckerBase> &getEnabledCheckers() const {
+    return enabledCheckerVec;
+  }
 
 #define __SAST_DOG_VISIT_NODE__(NODE)                                          \
   bool Visit##NODE(NODE *node, ASTContext *context);
@@ -33,8 +37,8 @@ private:
   CheckerManager(CheckerManager &&) = delete;
   CheckerManager &operator=(CheckerManager &&) = delete;
 
-  std::vector<CheckerBase *> supportCheckerVec;
-  std::vector<CheckerBase *> enabledCheckerVec;
+  std::vector<CheckerBase> supportCheckerVec;
+  std::vector<CheckerBase> enabledCheckerVec;
 };
 
 #endif /* E27B18B3_6DD1_45E2_BCFC_BD7AF2D2CBB8 */

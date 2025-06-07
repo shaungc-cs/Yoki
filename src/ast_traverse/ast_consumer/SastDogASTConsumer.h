@@ -9,9 +9,7 @@
 class SastDogASTConsumer : public clang::ASTConsumer {
 public:
   explicit SastDogASTConsumer(ASTContext *context) : visitor(context) {}
-  virtual void HandleTranslationUnit(clang::ASTContext &context) {
-    visitor.TraverseDecl(context.getTranslationUnitDecl());
-  }
+  virtual void HandleTranslationUnit(clang::ASTContext &context);
 
 private:
   SastDogASTVisitor visitor;
