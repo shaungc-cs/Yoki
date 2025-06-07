@@ -4,9 +4,9 @@
 class CheckerManager {
 
 public:
-  static CheckerManager *getInstance() {
+  static CheckerManager &getInstance() {
     static CheckerManager instance;
-    return &instance;
+    return instance;
   }
 
   void initializeCheckers();

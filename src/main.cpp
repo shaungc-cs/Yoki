@@ -68,18 +68,18 @@ int main(int argc, const char **argv) {
     spdlog::info("  -- " + file);
   }
 
-  auto checkerManager = CheckerManager::getInstance();
+  auto &checkerManager = CheckerManager::getInstance();
 
   // 初始化检查器，将所有系统支持的检查器全部注册到checkerManager中
-  checkerManager->initializeCheckers();
+  checkerManager.initializeCheckers();
 
   // 根据用户的配置文件重置checkerManager中的检查器
   // 若用户未显式配置，则默认启用所有检查器
-  checkerManager->setUpEnabledCheckers(config->getRulesVec());
+  checkerManager.setUpEnabledCheckers(config->getRulesVec());
   spdlog::info("Enabled checkers: " +
-               std::to_string(checkerManager->getEnabledCheckers().size()));
+               std::to_string(checkerManager.getEnabledCheckers().size()));
   // 输出启用的检查器列表
-  for (auto checker : checkerManager->getEnabledCheckers()) {
+  for (auto checker : checkerManager.getEnabledCheckers()) {
     spdlog::info("---- {}", checker->getName());
   }
 
@@ -101,15 +101,15 @@ int main(int argc, const char **argv) {
   spdlog::info("Analysis finished.");
 
   // 输出分析结果
-  spdlog::info("Size of defects: {}", DefectManager::getInstance()->size());
-  auto defectManager = DefectManager::getInstance();
-  defectManager->setSastConfig(std::move(config));
-  defectManager->dumpAsJson();
-  defectManager->dumpAsHtml();
+  spdlog::info("Size of defects: {}", DefectManager::getInstance().size());
+  auto &defectManager = DefectManager::getInstance();
+  defectManager.setSastConfig(std::move(config));
+  defectManager.dumpAsJson();
+  defectManager.dumpAsHtml();
 
   // 释放资源
-  CheckerManager::getInstance()->clearCheckers();
-  defectManager->clearDefects();
+  CheckerManager::getInstance().clearCheckers();
+  defectManager.clearDefects();
   compilationDBPtr.reset();
   fileVec.clear();
   spdlog::info("SastDog finished running.");

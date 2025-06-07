@@ -9,9 +9,9 @@
 
 class DefectManager {
 public:
-  static DefectManager *getInstance() {
+  static DefectManager &getInstance() {
     static DefectManager instance;
-    return &instance;
+    return instance;
   }
 
   void addDefect(const Defect &defect);
