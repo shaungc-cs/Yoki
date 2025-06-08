@@ -30,7 +30,11 @@ public:
 #undef __SAST_DOG_VISIT_NODE__
 
 private:
-  CheckerManager() { supportCheckerVec.reserve(1000); }
+  CheckerManager() {
+    // 预留空间以提高性能，避免频繁的内存分配
+    supportCheckerVec.reserve(1000);
+    enabledCheckerVec.reserve(1000);
+  }
   ~CheckerManager() = default;
   CheckerManager(const CheckerManager &) = delete;
   CheckerManager &operator=(const CheckerManager &) = delete;

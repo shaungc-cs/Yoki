@@ -1,6 +1,6 @@
 {
   "program_name": "no_goto",
-  "program_path": "/home/cs/workspace/sast_dog/test/no_goto",
+  "program_path": "/Users/cratelschen/workspace/sast_dog/test/no_goto",
   "rules_enabled": [],
   "exclude_paths": [
     ".*/third_party/.*"
