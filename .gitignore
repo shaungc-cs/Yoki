@@ -35,3 +35,6 @@
 **/build/**
 .vscode/
 .cache
+
+**/config_template/**
+report.html
