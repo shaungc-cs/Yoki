@@ -22,4 +22,6 @@ std::string intToHex(int value);
 // 生成 16 字符长的哈希值
 std::string generateHashID(const std::string &input);
 
+std::string highlight(const std::string &text);
+
 #endif /* E0475687_9D14_462E_9FFD_DE95C636A8AB */

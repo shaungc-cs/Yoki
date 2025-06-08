@@ -28,3 +28,5 @@ std::string generateHashID(const std::string &input) {
   }
   return hash;
 }
+
+std::string highlight(const std::string &text) { return "' " + text + " '"; }

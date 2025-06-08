@@ -1,4 +1,5 @@
 #include "DefectManager.h"
+#include "spdlog/spdlog.h"
 #include <fstream>
 #include <iostream>
 
@@ -30,5 +31,5 @@ void DefectManager::dumpAsHtml() {
     htmlFile << "</div>" << std::endl;
   }
   htmlFile.close();
-  std::cout << "Defects have been dumped to report.html" << std::endl;
+  spdlog::info("Defects dumped to report.html successfully.");
 }
