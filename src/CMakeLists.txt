@@ -1,9 +1,9 @@
 project(SastDog)
 
 # 优先使用 vcpkg 安装的包
-if(NOT DEFINED ENV{CMAKE_PREFIX_PATH})
-    message(FATAL_ERROR "CMAKE_PREFIX_PATH environment variable is not set.")
-endif()
+# if(NOT DEFINED ENV{CMAKE_PREFIX_PATH})
+#     message(FATAL_ERROR "CMAKE_PREFIX_PATH environment variable is not set.")
+# endif()
 
 list(APPEND CMAKE_PREFIX_PATH "${VCPKG_ROOT}/installed/x64-linux")
 
