@@ -35,4 +35,5 @@ private:
   std::string filePath;
   CheckerBase &belongingChecker;
 };
+
 #endif /* DD43D779_114E_4540_9E76_5E38ED4204A3 */

@@ -2,6 +2,7 @@
 #define E27B18B3_6DD1_45E2_BCFC_BD7AF2D2CBB8
 
 #include "CheckerBase.h"
+#include <memory>
 
 class CheckerManager {
 public:
@@ -16,12 +17,10 @@ public:
 
   void setUpEnabledCheckers(const std::vector<std::string> &rulesVec);
 
-  bool clearCheckers();
-
-  const std::vector<CheckerBase> &getSupportCheckers() const {
+  const std::vector<std::shared_ptr<CheckerBase>> &getSupportCheckers() const {
     return supportCheckerVec;
   }
-  const std::vector<CheckerBase> &getEnabledCheckers() const {
+  const std::vector<std::shared_ptr<CheckerBase>> &getEnabledCheckers() const {
     return enabledCheckerVec;
   }
 
@@ -38,8 +37,8 @@ private:
   CheckerManager(CheckerManager &&) = delete;
   CheckerManager &operator=(CheckerManager &&) = delete;
 
-  std::vector<CheckerBase> supportCheckerVec{};
-  std::vector<CheckerBase> enabledCheckerVec{};
+  std::vector<std::shared_ptr<CheckerBase>> supportCheckerVec{};
+  std::vector<std::shared_ptr<CheckerBase>> enabledCheckerVec{};
 };
 
 #endif /* E27B18B3_6DD1_45E2_BCFC_BD7AF2D2CBB8 */

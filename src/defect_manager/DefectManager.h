@@ -24,8 +24,6 @@ public:
     sastConfig = std::move(config);
   }
 
-  void clearDefects() { defects.clear(); }
-
   int size() const { return defects.size(); }
 
 private:

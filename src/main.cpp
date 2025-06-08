@@ -80,7 +80,7 @@ int main(int argc, const char **argv) {
                std::to_string(checkerManager.getEnabledCheckers().size()));
   // 输出启用的检查器列表
   for (auto &checker : checkerManager.getEnabledCheckers()) {
-    spdlog::info("---- {}", checker.getName());
+    spdlog::info("---- {}", checker->getName());
   }
 
   // 加载compile_commands.json文件生成CompilationDatabase
@@ -107,11 +107,6 @@ int main(int argc, const char **argv) {
   defectManager.dumpAsJson();
   defectManager.dumpAsHtml();
 
-  // 释放资源
-  CheckerManager::getInstance().clearCheckers();
-  defectManager.clearDefects();
-  compilationDBPtr.reset();
-  fileVec.clear();
   spdlog::info("SastDog finished running.");
   return 0;
 }

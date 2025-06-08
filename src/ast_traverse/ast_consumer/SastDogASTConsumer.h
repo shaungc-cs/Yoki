@@ -4,7 +4,6 @@
 #include "SastDogASTVisitor.h"
 #include <clang/AST/ASTConsumer.h>
 #include <clang/AST/ASTContext.h>
-#include <spdlog/spdlog.h>
 
 class SastDogASTConsumer : public clang::ASTConsumer {
 public:
