@@ -32,6 +32,12 @@ private:
   DefectManager &operator=(const DefectManager &) = delete;
   DefectManager() { defects.reserve(1000); }
   ~DefectManager() = default;
+  
+  // 辅助方法
+  std::string escapeHtml(const std::string& text) const;
+  std::string getUniqueFileCount() const;
+  std::string getCurrentWorkingDirectory() const;
+  
   std::vector<Defect> defects;
 
   std::unique_ptr<SastConfig> sastConfig = nullptr;

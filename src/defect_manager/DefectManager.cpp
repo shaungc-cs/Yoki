@@ -2,6 +2,12 @@
 #include "spdlog/spdlog.h"
 #include <fstream>
 #include <iostream>
+#include <sstream>
+#include <chrono>
+#include <iomanip>
+#include <regex>
+#include <set>
+#include <unistd.h>
 
 void DefectManager::addDefect(const Defect &defect) {
   // 锁定互斥量，确保线程安全
@@ -13,44 +19,95 @@ void DefectManager::addDefect(const Defect &defect) {
 void DefectManager::dumpAsJson() {}
 
 void DefectManager::dumpAsHtml() {
-  // 将缺陷信息以HTML格式输出
-  // 在当前路径下创建一个名为report.html的文件，如果存在则覆盖
-  std::ofstream htmlFile("report.html");
-  if (!htmlFile.is_open()) {
-    std::cerr << "Failed to open report.html for writing." << std::endl;
+  // 生成带时间戳的文件名
+  auto now = std::chrono::system_clock::now();
+  auto time_t = std::chrono::system_clock::to_time_t(now);
+  std::ostringstream filename;
+  filename << "SastDog_Report_" << std::put_time(std::localtime(&time_t), "%Y%m%d_%H%M%S") << ".html";
+  
+  // 读取模板文件
+  std::ifstream templateFile("report_template/report_template.html");
+  if (!templateFile.is_open()) {
+    spdlog::error("Failed to open report_template/report_template.html for reading.");
     return;
   }
-  // 写入HTML头部信息
-  htmlFile << "<!DOCTYPE html>" << std::endl;
-  htmlFile << "<html lang=\"en\">" << std::endl;
-  htmlFile << "<head>" << std::endl;
-  htmlFile << "  <meta charset=\"UTF-8\">" << std::endl;
-  htmlFile << "  <meta name=\"viewport\" content=\"width=device-width, "
-              "initial-scale=1.0\">"
-           << std::endl;
-  htmlFile << "  <title>SastDog Defect Report</title>" << std::endl;
-  htmlFile << "  <style>" << std::endl;
-  htmlFile << "    body { font-family: Arial, sans-serif; margin: 20px; }"
-           << std::endl;
-  htmlFile << "    .defect { border: 1px solid #ccc; padding: 10px; "
-              "margin-bottom: 10px; }"
-           << std::endl;
-  htmlFile << "    .defect h2 { margin: 0; }" << std::endl;
-  htmlFile << "    .defect p { margin: 5px 0; }" << std::endl;
-  htmlFile << "  </style>" << std::endl;
-  htmlFile << "</head>" << std::endl;
-  // 将logo照片添加到HTML文件中
-  htmlFile << "<body>" << std::endl;
-  htmlFile << "  <h1>SastDog Defect Report</h1>" << std::endl;
-  // 遍历所有缺陷并写入HTML文件
+  
+  std::string htmlTemplate((std::istreambuf_iterator<char>(templateFile)),
+                          std::istreambuf_iterator<char>());
+  templateFile.close();
+  
+  // 生成当前时间字符串
+  std::ostringstream timeStr;
+  timeStr << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S");
+  
+  // 生成缺陷数据行
+  std::ostringstream defectRows;
   for (const auto &defect : defects) {
-    htmlFile << "<div class=\"defect\">" << std::endl;
-    htmlFile << "  <p>File: " << defect.getFilePath() << "</p>" << std::endl;
-    htmlFile << "  <p>Line: " << defect.getLineNumber() << "</p>" << std::endl;
-    htmlFile << "  <p>Message: " << defect.getDefectMessage() << "</p>"
-             << std::endl;
-    htmlFile << "</div>" << std::endl;
+    defectRows << "                        <tr>\n";
+    defectRows << "                            <td>\n";
+    defectRows << "                                <span class=\"defect-id\">" << escapeHtml(defect.getDefectId()) << "</span>\n";
+    defectRows << "                            </td>\n";
+    defectRows << "                            <td>\n";
+    defectRows << "                                <span class=\"checker-name\">" << escapeHtml(defect.getBelongingChecker().getName()) << "</span>\n";
+    defectRows << "                            </td>\n";
+    defectRows << "                            <td>\n";
+    defectRows << "                                <div class=\"defect-message\">" << escapeHtml(defect.getDefectMessage()) << "</div>\n";
+    defectRows << "                            </td>\n";
+    defectRows << "                            <td>\n";
+    defectRows << "                                <span class=\"file-path\">" << escapeHtml(defect.getFilePath()) << "</span>\n";
+    defectRows << "                            </td>\n";
+    defectRows << "                            <td>\n";
+    defectRows << "                                <span class=\"line-number\">" << defect.getLineNumber() << "</span>\n";
+    defectRows << "                            </td>\n";
+    defectRows << "                        </tr>\n";
   }
+  
+  // 替换模板中的占位符
+  htmlTemplate = std::regex_replace(htmlTemplate, std::regex("\\{\\{SCAN_TIME\\}\\}"), timeStr.str());
+  htmlTemplate = std::regex_replace(htmlTemplate, std::regex("\\{\\{DEFECT_COUNT\\}\\}"), std::to_string(defects.size()));
+  htmlTemplate = std::regex_replace(htmlTemplate, std::regex("\\{\\{FILE_COUNT\\}\\}"), getUniqueFileCount());
+  htmlTemplate = std::regex_replace(htmlTemplate, std::regex("\\{\\{PROJECT_PATH\\}\\}"), getCurrentWorkingDirectory());
+  htmlTemplate = std::regex_replace(htmlTemplate, std::regex("\\{\\{DEFECT_ROWS\\}\\}"), defectRows.str());
+  htmlTemplate = std::regex_replace(htmlTemplate, std::regex("\\{\\{GENERATION_TIME\\}\\}"), timeStr.str());
+  
+  // 写入最终报告文件
+  std::ofstream htmlFile(filename.str());
+  if (!htmlFile.is_open()) {
+    spdlog::error("Failed to open {} for writing.", filename.str());
+    return;
+  }
+  
+  htmlFile << htmlTemplate;
   htmlFile.close();
-  spdlog::info("Defects dumped to report.html successfully.");
+  
+  spdlog::info("Defects dumped to {} successfully.", filename.str());
+}
+
+// 辅助方法实现
+std::string DefectManager::escapeHtml(const std::string& text) const {
+  std::string result = text;
+  std::regex_replace(result, std::regex("&"), "&amp;");
+  result = std::regex_replace(result, std::regex("<"), "&lt;");
+  result = std::regex_replace(result, std::regex(">"), "&gt;");
+  result = std::regex_replace(result, std::regex("\""), "&quot;");
+  result = std::regex_replace(result, std::regex("'"), "&#39;");
+  return result;
+}
+
+std::string DefectManager::getUniqueFileCount() const {
+  std::set<std::string> uniqueFiles;
+  for (const auto& defect : defects) {
+    uniqueFiles.insert(defect.getFilePath());
+  }
+  return std::to_string(uniqueFiles.size());
+}
+
+std::string DefectManager::getCurrentWorkingDirectory() const {
+  char* cwd = getcwd(nullptr, 0);
+  if (cwd != nullptr) {
+    std::string result(cwd);
+    free(cwd);
+    return result;
+  }
+  return "Unknown";
 }
