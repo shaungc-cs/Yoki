@@ -1,6 +1,7 @@
 #include "DefectManager.h"
 #include "spdlog/spdlog.h"
 #include <chrono>
+#include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -22,10 +23,21 @@ void DefectManager::dumpAsHtml() {
   // 生成带时间戳的文件名
   auto now = std::chrono::system_clock::now();
   auto time_t = std::chrono::system_clock::to_time_t(now);
-  std::ostringstream filename;
-  filename << "Yoki_Report_"
-           << std::put_time(std::localtime(&time_t), "%Y%m%d_%H%M%S")
-           << ".html";
+  std::ostringstream timestamp;
+  timestamp << std::put_time(std::localtime(&time_t), "%Y%m%d_%H%M%S");
+
+  // 创建报告文件夹
+  std::string reportDirName = "Yoki_Report_" + timestamp.str();
+  std::string reportDir = reportDirName;
+
+  // 创建目录
+  std::string mkdirCmd = "mkdir -p " + reportDir;
+  if (system(mkdirCmd.c_str()) != 0) {
+    spdlog::error("Failed to create report directory: {}", reportDir);
+    return;
+  }
+
+  std::string htmlFilename = reportDir + "/report.html";
 
   // 读取模板文件
   std::ifstream templateFile("report_template/report_template.html");
@@ -88,17 +100,39 @@ void DefectManager::dumpAsHtml() {
   htmlTemplate = std::regex_replace(
       htmlTemplate, std::regex("\\{\\{GENERATION_TIME\\}\\}"), timeStr.str());
 
+  // 修改logo路径为当前目录
+  htmlTemplate = std::regex_replace(
+      htmlTemplate, std::regex("\\.\\.\/yoki_logo\\.png"), "yoki_logo.png");
+
   // 写入最终报告文件
-  std::ofstream htmlFile(filename.str());
+  std::ofstream htmlFile(htmlFilename);
   if (!htmlFile.is_open()) {
-    spdlog::error("Failed to open {} for writing.", filename.str());
+    spdlog::error("Failed to open {} for writing.", htmlFilename);
     return;
   }
 
   htmlFile << htmlTemplate;
   htmlFile.close();
 
-  spdlog::info("Defects dumped to {} successfully.", filename.str());
+  // 复制logo文件到报告目录
+  std::string copyLogoCmd = "cp yoki_logo.png " + reportDir + "/";
+  if (system(copyLogoCmd.c_str()) != 0) {
+    spdlog::warn("Failed to copy logo file to report directory");
+  }
+
+  // 创建压缩包
+  std::string zipFilename = reportDirName + ".zip";
+  std::string zipCmd =
+      "cd " + reportDir + " && zip -r ../" + zipFilename + " . && cd ..";
+  if (system(zipCmd.c_str()) == 0) {
+    spdlog::info("Report package created successfully: {}", zipFilename);
+    // 删除临时目录
+    std::string removeCmd = "rm -rf " + reportDir;
+    system(removeCmd.c_str());
+  } else {
+    spdlog::error("Failed to create report package");
+    spdlog::info("Report files available in directory: {}", reportDir);
+  }
 }
 
 // 辅助方法实现
