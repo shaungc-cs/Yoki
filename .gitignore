@@ -37,4 +37,4 @@
 .cache
 
 **/config_template/**
-report.html
+Yoki_Report_.*.html
