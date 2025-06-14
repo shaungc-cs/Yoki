@@ -391,19 +391,19 @@
       <div class="meta-grid">
         <div class="meta-item">
           <span class="meta-label">扫描时间</span>
-          <span class="meta-value" id="scan-time">{{SCAN_TIME}}</span>
+          <span class="meta-value" id="scan-time">2025-06-14 20:26:52</span>
         </div>
         <div class="meta-item">
           <span class="meta-label">缺陷总数</span>
-          <span class="meta-value" id="defect-count">{{DEFECT_COUNT}}</span>
+          <span class="meta-value" id="defect-count">2</span>
         </div>
         <div class="meta-item">
           <span class="meta-label">扫描文件数</span>
-          <span class="meta-value" id="file-count">{{FILE_COUNT}}</span>
+          <span class="meta-value" id="file-count">1</span>
         </div>
         <div class="meta-item">
           <span class="meta-label">项目路径</span>
-          <span class="meta-value" id="project-path">{{PROJECT_PATH}}</span>
+          <span class="meta-value" id="project-path">/Users/cratelschen/workspace/sast_dog</span>
         </div>
       </div>
     </section>
@@ -445,7 +445,41 @@
           </thead>
           <tbody id="defects-tbody">
             <!-- 缺陷数据将通过C++代码动态插入到这里 -->
-            {{DEFECT_ROWS}}
+                                    <tr>
+                            <td>
+                                <span class="defect-id">65d67de101f87b49</span>
+                            </td>
+                            <td>
+                                <span class="checker-name">MISRA_CPP2023:Rule 9.6.1</span>
+                            </td>
+                            <td>
+                                <div class="defect-message">&#39; goto &#39;statement should not be used.</div>
+                            </td>
+                            <td>
+                                <span class="file-path">/Users/cratelschen/workspace/sast_dog/test/no_goto/main.cpp</span>
+                            </td>
+                            <td>
+                                <span class="line-number">6</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="defect-id">65d67de101f87b49</span>
+                            </td>
+                            <td>
+                                <span class="checker-name">MISRA_CPP2023:Rule 9.6.1</span>
+                            </td>
+                            <td>
+                                <div class="defect-message">&#39; goto &#39;statement should not be used.</div>
+                            </td>
+                            <td>
+                                <span class="file-path">/Users/cratelschen/workspace/sast_dog/test/no_goto/main.cpp</span>
+                            </td>
+                            <td>
+                                <span class="line-number">15</span>
+                            </td>
+                        </tr>
+
           </tbody>
         </table>
 
@@ -461,7 +495,7 @@
     <!-- 页脚 -->
     <footer class="footer">
       <p><strong>Yoki</strong> - 静态应用安全测试工具</p>
-      <p class="version">报告生成时间: <span id="generation-time">{{GENERATION_TIME}}</span></p>
+      <p class="version">报告生成时间: <span id="generation-time">2025-06-14 20:26:52</span></p>
     </footer>
   </div>
 
@@ -696,7 +730,7 @@
     document.addEventListener('DOMContentLoaded', function () {
       // 设置默认生成时间
       const generationTimeElement = document.getElementById('generation-time');
-      if (generationTimeElement && generationTimeElement.textContent === '{{GENERATION_TIME}}') {
+      if (generationTimeElement && generationTimeElement.textContent === '2025-06-14 20:26:52') {
         generationTimeElement.textContent = new Date().toLocaleString('zh-CN');
       }
 

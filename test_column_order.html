@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试报告 - 列顺序验证</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>SAST Dog 报告列顺序测试</h1>
+  <p>验证列顺序是否为：ID、检查器、缺陷描述、路径、行号</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>缺陷ID</th>
+        <th>检查器</th>
+        <th>缺陷描述</th>
+        <th>文件路径</th>
+        <th>行号</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GOTO_001</td>
+        <td>GotoChecker</td>
+        <td>不应使用goto语句</td>
+        <td>/test/main.cpp</td>
+        <td>6</td>
+      </tr>
+      <tr>
+        <td>GOTO_002</td>
+        <td>GotoChecker</td>
+        <td>不应使用goto语句</td>
+        <td>/test/main.cpp</td>
+        <td>15</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><strong>✅ 列顺序确认：</strong></p>
+  <ol>
+    <li>缺陷ID (第1列)</li>
+    <li>检查器 (第2列)</li>
+    <li>缺陷描述 (第3列)</li>
+    <li>文件路径 (第4列)</li>
+    <li>行号 (第5列)</li>
+  </ol>
+</body>
+
+</html>

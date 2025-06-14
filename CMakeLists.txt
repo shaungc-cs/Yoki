@@ -25,7 +25,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
 endif()
 
-project(SastDog VERSION 1.0.0)
+project(Yoki VERSION 1.0.0)
 
 # 设置当前项目 C++标准
 set(CMAKE_CXX_STANDARD 17)

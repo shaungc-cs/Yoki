@@ -24,10 +24,10 @@ public:
     return enabledCheckerVec;
   }
 
-#define __SAST_DOG_VISIT_NODE__(NODE)                                          \
+#define __YOKI_VISIT_NODE__(NODE)                                              \
   bool Visit##NODE(NODE *node, ASTContext *context);
 #include "visit_node.inc"
-#undef __SAST_DOG_VISIT_NODE__
+#undef __YOKI_VISIT_NODE__
 
 private:
   CheckerManager() {

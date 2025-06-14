@@ -1,6 +1,6 @@
 project(ast_visitor)
 
-add_library(${PROJECT_NAME} SastDogASTVisitor.cpp)
+add_library(${PROJECT_NAME} YokiASTVisitor.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 

@@ -13,7 +13,7 @@ void CheckerManager::initializeCheckers() {
 #include "misra_cpp2023/misra_cpp2023.inc";
 }
 
-#define __SAST_DOG_VISIT_NODE__(NODE)                                          \
+#define __YOKI_VISIT_NODE__(NODE)                                              \
   bool CheckerManager::Visit##NODE(NODE *node, ASTContext *context) {          \
     for (const auto &checker : enabledCheckerVec) {                            \
       if (checker->Visit##NODE(node, context)) {                               \
@@ -23,7 +23,7 @@ void CheckerManager::initializeCheckers() {
     return false;                                                              \
   }
 #include "visit_node.inc"
-#undef __SAST_DOG_VISIT_NODE__
+#undef __YOKI_VISIT_NODE__
 
 void CheckerManager::setUpEnabledCheckers(
     const std::vector<std::string> &rulesVec) {

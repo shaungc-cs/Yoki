@@ -14,10 +14,10 @@ public:
               CheckerSeverity category)
       : name(name), description(description), category(category) {}
 
-#define __SAST_DOG_VISIT_NODE__(NODE)                                          \
+#define __YOKI_VISIT_NODE__(NODE)                                              \
   virtual bool Visit##NODE(NODE *node, ASTContext *context);
 #include "visit_node.inc"
-#undef __SAST_DOG_VISIT_NODE__
+#undef __YOKI_VISIT_NODE__
 
 public:
   void setName(const std::string &name) { this->name = name; }

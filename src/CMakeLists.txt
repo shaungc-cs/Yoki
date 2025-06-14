@@ -1,4 +1,4 @@
-project(SastDog)
+project(Yoki VERSION 1.0.0)
 
 # 优先使用 vcpkg 安装的包
 # if(NOT DEFINED ENV{CMAKE_PREFIX_PATH})

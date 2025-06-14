@@ -6,13 +6,13 @@
 
 using namespace clang;
 
-class SastDogASTVisitor : public RecursiveASTVisitor<SastDogASTVisitor> {
+class YokiASTVisitor : public RecursiveASTVisitor<YokiASTVisitor> {
 public:
-  explicit SastDogASTVisitor(ASTContext *context) : context(context) {}
+  explicit YokiASTVisitor(ASTContext *context) : context(context) {}
 
-#define __SAST_DOG_VISIT_NODE__(NODE) bool Visit##NODE(NODE *node);
+#define __YOKI_VISIT_NODE__(NODE) bool Visit##NODE(NODE *node);
 #include "visit_node.inc"
-#undef __SAST_DOG_VISIT_NODE__
+#undef __YOKI_VISIT_NODE__
 
 private:
   ASTContext *context;

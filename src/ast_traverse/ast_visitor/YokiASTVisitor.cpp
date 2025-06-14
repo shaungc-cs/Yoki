@@ -1,7 +1,9 @@
-#include "CheckerBase.h"
+#include "YokiASTVisitor.h"
+#include "CheckerManager.h"
 
 #define __YOKI_VISIT_NODE__(NODE)                                              \
-  bool CheckerBase::Visit##NODE(NODE *node, ASTContext *context) {             \
+  bool YokiASTVisitor::Visit##NODE(NODE *node) {                               \
+    CheckerManager::getInstance().Visit##NODE(node, context);                  \
     return true;                                                               \
   }
 

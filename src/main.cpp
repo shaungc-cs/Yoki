@@ -26,12 +26,13 @@ using namespace clang::tooling;
 int llvm::DisableABIBreakingChecks = 1;
 
 // 自定义命令行集合，用于将命令行选项分组
-static llvm::cl::OptionCategory MyToolCategory("SastDog options");
+static llvm::cl::OptionCategory MyToolCategory("Yoki options");
 
 int main(int argc, const char **argv) {
   // 设置日志级别为 info
   spdlog::set_level(spdlog::level::info);
 
+  spdlog::info("Yoki static analysis tool started.");
   // 清除默认options
   llvm::cl::HideUnrelatedOptions(MyToolCategory);
 
@@ -41,7 +42,7 @@ int main(int argc, const char **argv) {
       llvm::cl::Required, llvm::cl::cat(MyToolCategory));
 
   // 处理命令行参数
-  llvm::cl::ParseCommandLineOptions(argc, argv, "SastDog\n");
+  llvm::cl::ParseCommandLineOptions(argc, argv, "Yoki\n");
 
   spdlog::info("Path to configuration file: " + configFilePath);
 
@@ -107,6 +108,6 @@ int main(int argc, const char **argv) {
   defectManager.dumpAsJson();
   defectManager.dumpAsHtml();
 
-  spdlog::info("SastDog finished running.");
+  spdlog::info("Yoki finished running.");
   return 0;
 }

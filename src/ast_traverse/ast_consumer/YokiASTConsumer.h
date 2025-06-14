@@ -1,17 +1,17 @@
 #ifndef FC5C20E8_3E50_433A_A8A4_209A596BBFEA
 #define FC5C20E8_3E50_433A_A8A4_209A596BBFEA
 
-#include "SastDogASTVisitor.h"
+#include "YokiASTVisitor.h"
 #include <clang/AST/ASTConsumer.h>
 #include <clang/AST/ASTContext.h>
 
-class SastDogASTConsumer : public clang::ASTConsumer {
+class YokiASTConsumer : public clang::ASTConsumer {
 public:
-  explicit SastDogASTConsumer(ASTContext *context) : visitor(context) {}
+  explicit YokiASTConsumer(ASTContext *context) : visitor(context) {}
   virtual void HandleTranslationUnit(clang::ASTContext &context);
 
 private:
-  SastDogASTVisitor visitor;
+  YokiASTVisitor visitor;
 };
 
 #endif /* FC5C20E8_3E50_433A_A8A4_209A596BBFEA */

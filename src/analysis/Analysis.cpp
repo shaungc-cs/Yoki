@@ -1,5 +1,5 @@
 #include "Analysis.h"
-#include "SastDogASTFrontendAction.h"
+#include "YokiASTFrontendAction.h"
 #include <atomic>
 #include <clang/Tooling/CompilationDatabase.h>
 #include <clang/Tooling/Tooling.h>
@@ -65,6 +65,6 @@ void Analyse::doAnalyse(std::shared_ptr<CompilationDatabase> compilationDB,
 
     std::vector<std::string> currentFileVec = {file};
     ClangTool Tool(*compilationDB, currentFileVec);
-    Tool.run(newFrontendActionFactory<SastDogASTFrontendAction>().get());
+    Tool.run(newFrontendActionFactory<YokiASTFrontendAction>().get());
   }
 }

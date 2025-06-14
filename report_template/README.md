@@ -1,6 +1,6 @@
 # Report Template
 
-此文件夹包含SAST Dog静态代码分析工具的HTML报告模板。
+此文件夹包含Yoki静态代码分析工具的HTML报告模板。
 
 ## 文件说明
 
