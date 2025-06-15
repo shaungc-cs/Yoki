@@ -1,6 +1,7 @@
 #ifndef E32C7F65_C606_4DEE_9B24_B11CA35DAD40
 #define E32C7F65_C606_4DEE_9B24_B11CA35DAD40
 
+#include <clang/AST/ASTContext.h>
 #include <clang/AST/Decl.h>
 #include <clang/Tooling/CompilationDatabase.h>
 #include <memory>
@@ -37,6 +38,14 @@ public:
   void clearFunctionDecls();
   size_t getFunctionDeclCount() const;
 
+  // astContext相关方法
+  std::shared_ptr<clang::ASTContext> getASTContext() const {
+    return astContext;
+  }
+  void setASTContext(clang::ASTContext *context) {
+    astContext = std::shared_ptr<clang::ASTContext>(context);
+  }
+
   // Mode检查方法
   bool isStaticAnalysis();
   bool isTUGeneration();
@@ -56,6 +65,7 @@ private:
   std::shared_ptr<clang::tooling::CompilationDatabase> compilationDBPtr;
   std::vector<std::string> fileVec;
   std::vector<clang::FunctionDecl *> functionDecls;
+  std::shared_ptr<clang::ASTContext> astContext = nullptr;
 };
 
 #endif /* E32C7F65_C606_4DEE_9B24_B11CA35DAD40 */

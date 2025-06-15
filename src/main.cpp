@@ -1,4 +1,5 @@
 #include <clang/AST/ASTContext.h>
+#include <clang/AST/ASTDumper.h>
 #include <clang/AST/RecursiveASTVisitor.h>
 #include <clang/Frontend/CompilerInstance.h>
 #include <clang/Frontend/FrontendActions.h>
@@ -16,6 +17,8 @@
 #include "YokiConfig.h"
 #include "compliance_public_header.h"
 #include "handler.h"
+
+#include "utils/ASTDumperUtils.h"
 
 using namespace clang;
 using namespace clang::tooling;
@@ -115,10 +118,51 @@ int main(int argc, const char **argv) {
     // 输出分析结果
     spdlog::info("Size of defects: {}", DefectManager::getInstance().size());
     auto &defectManager = DefectManager::getInstance();
-    // defectManager.dumpAsJson();
-    defectManager.dumpAsHtml();
-  } else {
+
+    // 只有在有缺陷时才生成报告
+    if (defectManager.size() > 0) {
+      spdlog::info("Generating HTML report...");
+      try {
+        // defectManager.dumpAsJson();
+        defectManager.dumpAsHtml();
+        spdlog::info("HTML report generated successfully.");
+      } catch (const std::exception &e) {
+        spdlog::error("Failed to generate HTML report: {}", e.what());
+      }
+    } else {
+      spdlog::info("No defects found, skipping report generation.");
+    }
+  }
+
+  if (config.isTUGeneration()) {
     Handler::handle();
+    auto funcDecls = config.getAllFunctionDecls();
+
+    for (auto func : funcDecls) {
+
+      // ...existing code...
+
+      if (func) {
+        try {
+          // // 使用安全的ASTDumper辅助函数
+          // std::string functionDetails =
+          //     yoki::ASTDumperUtils::getFunctionDetails(func,
+          //                                              config.getASTContext());
+          // llvm::outs() << functionDetails << "\n";
+
+          // 可选：保存到文件
+          std::string filename = "ast_dump_" + func->getNameAsString() + ".txt";
+          if (yoki::ASTDumperUtils::saveASTDumpToFile(
+                  func, config.getASTContext(), filename)) {
+            llvm::outs() << "AST dump saved to: " << filename << "\n";
+          }
+        } catch (const std::exception &e) {
+          llvm::errs() << "Error processing function AST: " << e.what() << "\n";
+        }
+      }
+    }
+
+    spdlog::info("Total function declarations collected: {}", funcDecls.size());
   }
 
   spdlog::info("Yoki finished running.");

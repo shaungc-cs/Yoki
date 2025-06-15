@@ -7,13 +7,10 @@
 
 using namespace clang;
 
-class YokiUTGenerationASTViositor
-    : public RecursiveASTVisitor<YokiUTGenerationASTViositor> {
+class YokiUTGenerationASTVisitor
+    : public RecursiveASTVisitor<YokiUTGenerationASTVisitor> {
 public:
-  explicit YokiUTGenerationASTViositor(ASTContext *context) : context(context) {
-    // 初始化日志记录器
-    spdlog::info("YokiUTGenerationASTViositor initialized.");
-  }
+  explicit YokiUTGenerationASTVisitor(ASTContext *context) : context(context) {}
 
   bool VisitFunctionDecl(FunctionDecl *node);
 

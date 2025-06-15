@@ -29,25 +29,20 @@ void Handler::handle() {
 
   auto threadSize = Handler::getThreadSize();
 
-  spdlog::info("Yoki using {} thread to complete its work.", threadSize);
+  spdlog::info("Yoki using {} thread to complete its work", threadSize);
 
   std::mutex mtx;
   std::atomic<int> proceedFileCount(0);
 
-  if (config.isStaticAnalysis()) {
-    spdlog::info("Yoki is running in static analysis mode.");
-    for (int i = 0; i < threadSize; ++i) {
-      workerPool.emplace_back(
-          std::thread([&] { Handler::doHandle(proceedFileCount); }));
-    }
+  for (int i = 0; i < threadSize; ++i) {
+    workerPool.emplace_back(
+        std::thread([&] { Handler::doHandle(proceedFileCount); }));
+  }
 
-    for (std::thread &worker : workerPool) {
-      if (worker.joinable()) {
-        worker.join();
-      }
+  for (std::thread &worker : workerPool) {
+    if (worker.joinable()) {
+      worker.join();
     }
-  } else {
-    spdlog::info("Yoki is running in dynamic analysis mode.");
   }
 }
 

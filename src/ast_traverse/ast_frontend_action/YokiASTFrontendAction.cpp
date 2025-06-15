@@ -8,18 +8,21 @@
 
 std::unique_ptr<clang::ASTConsumer> YokiASTFrontendAction::CreateASTConsumer(
     clang::CompilerInstance &CI, [[maybe_unused]] llvm::StringRef InFile) {
-
-  if (YokiConfig::getInstance().isStaticAnalysis()) {
-    spdlog::info("Creating ASTConsumer for static analysis mode.");
+  auto &config = YokiConfig::getInstance();
+  auto &context = CI.getASTContext();
+  if (config.isStaticAnalysis()) {
     // 如果是静态分析模式，使用 YokiStaticScanASTConsumer
-    return std::make_unique<YokiStaticScanASTConsumer>(&CI.getASTContext());
-  } else if (YokiConfig::getInstance().isTUGeneration()) {
-    spdlog::info("Creating ASTConsumer for unit test generation mode.");
+    spdlog::info("Working in static code analysis mode.");
+    return std::make_unique<YokiStaticScanASTConsumer>(&context);
+  } else if (config.isTUGeneration()) {
+    spdlog::info("Working in unit test generation mode.");
     // 如果是单元生成模式，使用 YokiUTGenerationASTConsumer
-    return std::make_unique<YokiUTGenerationASTConsumer>(&CI.getASTContext());
+    return std::make_unique<YokiUTGenerationASTConsumer>(&context);
   } else {
     // 如果没有匹配到任何模式，抛出异常
-    spdlog::error("Unsupported mode: {}", YokiConfig::getInstance().getMode());
+    spdlog::error("Unsupported mode: {}", config.getMode());
     std::exit(EXIT_FAILURE);
   }
+
+  config.setASTContext(&context);
 }
