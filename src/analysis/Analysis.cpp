@@ -1,5 +1,6 @@
 #include "Analysis.h"
 #include "YokiASTFrontendAction.h"
+#include "YokiConfig.h"
 #include <atomic>
 #include <clang/Tooling/CompilationDatabase.h>
 #include <clang/Tooling/Tooling.h>
@@ -27,7 +28,7 @@ void Analyse::analyse(std::shared_ptr<CompilationDatabase> compilationDB,
 
   auto threadSize = Analyse::getThreadSize();
 
-  spdlog::info("Analyse using {} thread", threadSize);
+  spdlog::info("Yoki using {} thread to complete its work.", threadSize);
 
   std::mutex mtx;
   std::atomic<int> proceedFileCount(0);
@@ -51,6 +52,7 @@ void Analyse::doAnalyse(std::shared_ptr<CompilationDatabase> compilationDB,
   auto allFileSize = (int)fileVec.size();
 
   while (true) {
+    spdlog::info("test");
     int currentIndex = proceedFileCount.fetch_add(1);
     if (currentIndex >= allFileSize) {
       break;
@@ -67,4 +69,11 @@ void Analyse::doAnalyse(std::shared_ptr<CompilationDatabase> compilationDB,
     ClangTool Tool(*compilationDB, currentFileVec);
     Tool.run(newFrontendActionFactory<YokiASTFrontendAction>().get());
   }
+}
+
+void Analyse::analyse() {
+  // 从YokiConfig单例获取参数
+  auto& config = YokiConfig::getInstance();
+  spdlog::info(config.getMode());
+  analyse(config.getCompilationDB(), config.getFileVec());
 }

@@ -3,16 +3,18 @@
 
 #include <clang/AST/AST.h>
 #include <clang/AST/RecursiveASTVisitor.h>
+#include <spdlog/spdlog.h>
 
 using namespace clang;
 
 class YokiUTGenerationASTViositor : public RecursiveASTVisitor<YokiUTGenerationASTViositor> {
 public:
-  explicit YokiUTGenerationASTViositor(ASTContext *context) : context(context) {}
+  explicit YokiUTGenerationASTViositor(ASTContext *context) : context(context) {
+    // 初始化日志记录器
+    spdlog::info("YokiUTGenerationASTViositor initialized.");
+  }
 
-#define __YOKI_VISIT_NODE__(NODE) bool Visit##NODE(NODE *node);
-#include "visit_node.inc"
-#undef __YOKI_VISIT_NODE__
+  bool VisitFunctionDecl(FunctionDecl *node);
 
 private:
   ASTContext *context;

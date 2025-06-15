@@ -2,6 +2,8 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
+#include <regex>
+#include <cstdlib>
 
 using json = nlohmann::json;
 
@@ -21,8 +23,81 @@ std::vector<std::string> YokiConfig::getExcludePaths() { return excludePaths; }
 
 std::string YokiConfig::getMode() { return mode; }
 
+std::shared_ptr<clang::tooling::CompilationDatabase> YokiConfig::getCompilationDB() {
+  return compilationDBPtr;
+}
+
+void YokiConfig::setCompilationDB(std::shared_ptr<clang::tooling::CompilationDatabase> db) {
+  compilationDBPtr = db;
+}
+
+std::vector<std::string> YokiConfig::getFileVec() {
+  return fileVec;
+}
+
+void YokiConfig::initializeFileVec() {
+  // 构造compile_commands.json文件路径
+  std::string compileCommandDir = programPath + "/build";
+  std::string compileCommandFile = compileCommandDir + "/compile_commands.json";
+
+  // 将字符串模式转换为正则表达式对象
+  std::vector<std::regex> excludePatterns;
+  for (const auto &pattern : excludePaths) {
+    excludePatterns.push_back(std::regex(pattern));
+  }
+
+  std::ifstream file(compileCommandFile);
+  if (!file.is_open()) {
+    spdlog::error("Failed to open compile_commands.json: {}", compileCommandFile);
+    std::exit(EXIT_FAILURE);
+  }
+
+  fileVec.clear(); // 清空之前的内容
+  nlohmann::json jsonData;
+  file >> jsonData;
+  for (const auto &entry : jsonData) {
+    std::string filePath = entry["file"];
+    bool exclude = false;
+    for (const auto &excludePtn : excludePatterns) {
+      if (std::regex_search(filePath, excludePtn)) {
+        exclude = true;
+        break;
+      }
+    }
+    // 如果不在排除列表中，则添加到待检查文件列表中
+    if (!exclude) {
+      fileVec.push_back(filePath);
+    }
+  }
+  // 关闭文件
+  file.close();
+  
+  spdlog::info("Files to be checked: " + std::to_string(fileVec.size()));
+  for (const auto &file : fileVec) {
+    spdlog::info("  -- " + file);
+  }
+}
+
+void YokiConfig::addFunctionDecl(clang::FunctionDecl* funcDecl) {
+  if (funcDecl != nullptr) {
+    functionDecls.push_back(funcDecl);
+  }
+}
+
+const std::vector<clang::FunctionDecl*>& YokiConfig::getAllFunctionDecls() const {
+  return functionDecls;
+}
+
+void YokiConfig::clearFunctionDecls() {
+  functionDecls.clear();
+}
+
+size_t YokiConfig::getFunctionDeclCount() const {
+  return functionDecls.size();
+}
+
 bool YokiConfig::isStaticAnalysis() { 
-  return mode == "static_analysis"; 
+  return mode == "code_analysis"; 
 }
 
 bool YokiConfig::isTUGeneration() { 
@@ -45,7 +120,7 @@ bool YokiConfig::loadConfigFromFile(const std::string &filePath) {
   //   "program_path" : "path/to/program",
   //   "rules_enabled": [ "rule1", "rule2", "rule3" ],
   //   "exclude_paths" : [ "path1", "path2", "path3" ],
-  //   "mode" : "scan|report|analyze"
+  //   "mode" : "code_analysis|tu_generation"
   // }
 
   // 读取 JSON 数据
@@ -53,26 +128,9 @@ bool YokiConfig::loadConfigFromFile(const std::string &filePath) {
   programPath = config["program_path"];
   rulesVec = config["rules_enabled"].get<std::vector<std::string>>();
   excludePaths = config["exclude_paths"].get<std::vector<std::string>>();
-  
-  // 读取mode字段，如果不存在则设置默认值
-  if (config.contains("mode")) {
-    mode = config["mode"];
-  } else {
-    mode = "scan"; // 默认模式
-  }
+  mode = config["mode"].get<std::string>();
 
   spdlog::info("Successfully load config from {}", filePath);
-  spdlog::info("Program name: " + programName);
-  spdlog::info("Program path: " + programPath);
-  spdlog::info("Mode: " + mode);
-  spdlog::info("Rules enabled: ");
-  for (const auto &rule : rulesVec) {
-    spdlog::info("  ---- " + rule);
-  }
-  spdlog::info("Exclude paths: ");
-  for (const auto &path : excludePaths) {
-    spdlog::info("  ---- " + path);
-  }
   
   // 关闭文件
   file.close();

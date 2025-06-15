@@ -14,7 +14,6 @@
 #include "CheckerManager.h"
 #include "DefectManager.h"
 #include "YokiConfig.h"
-#include "Utils.h"
 
 #include "compliance_public_header.h"
 
@@ -32,8 +31,21 @@ int main(int argc, const char **argv) {
   spdlog::set_level(spdlog::level::info);
 
   spdlog::info("Yoki static analysis tool started.");
+  
   // 清除默认options
   llvm::cl::HideUnrelatedOptions(MyToolCategory);
+
+  // 如果没有提供任何参数，添加--help到参数列表
+  std::vector<const char*> modified_argv;
+  int modified_argc = argc;
+  const char** final_argv = argv;
+  
+  if(argc == 1) {
+    modified_argv.push_back(argv[0]);  // 程序名
+    modified_argv.push_back("--help"); // 添加--help参数
+    modified_argc = 2;
+    final_argv = modified_argv.data();
+  }
 
   // 定义一个命令行选项，并将其归类到自定义类别中
   static llvm::cl::opt<std::string> configFilePath(
@@ -42,33 +54,45 @@ int main(int argc, const char **argv) {
       
 
   // 处理命令行参数
-  llvm::cl::ParseCommandLineOptions(argc, argv, "Yoki\n");
+  llvm::cl::ParseCommandLineOptions(modified_argc, final_argv, "Yoki\n");
 
   spdlog::info("Path to configuration file: " + configFilePath);
 
+  auto &config = YokiConfig::getInstance();
   // 读取配置文件
-  if (!YokiConfig::getInstance().loadConfigFromFile(configFilePath)) {
+  if (!config.loadConfigFromFile(configFilePath)) {
     spdlog::error("Failed to load configuration file: {}", configFilePath);
     return 1;
   }
 
+
+  if(config.isStaticAnalysis()) {
   // 根据配置文件中的项目路径找到compile_command.json文件
-  std::string compileCommandDir = YokiConfig::getInstance().getProgramPath() + "/build";
+  std::string compileCommandDir = config.getProgramPath() + "/build";
   spdlog::info("Compile command directory: " + compileCommandDir);
 
-  // 根据compile_commands.json文件获取需要检查的文件列表
-  // 会根据用户配置文件中的排除路径进行过滤
-  auto fileVec = getFileVec(compileCommandDir);
+  // 加载compile_commands.json文件生成CompilationDatabase
+  std::string errorMsg = "";
+  auto compilationDB = clang::tooling::CompilationDatabase::loadFromDirectory(
+      compileCommandDir, errorMsg);
 
-  if (fileVec.empty()) {
+  if (!compilationDB) {
+    spdlog::error("Failed to load compile_commands.json: {}", errorMsg);
+    std::exit(-1);
+  }
+  spdlog::info("Loaded compile_commands.json successfully.");
+
+  // complilationDB是一个unique_ptr类型智能指针，使用std::move将其转移到shared_ptr中
+  // 并存储到YokiConfig中
+  std::shared_ptr compilationDBPtr = std::move(compilationDB);
+  YokiConfig::getInstance().setCompilationDB(compilationDBPtr);
+  
+  // 初始化文件列表
+  YokiConfig::getInstance().initializeFileVec();
+  
+  if (YokiConfig::getInstance().getFileVec().empty()) {
     spdlog::error("No files to be checked.");
     return 1;
-  }
-
-  // 输出需要检查的文件列表
-  spdlog::info("Files to be checked: " + std::to_string(fileVec.size()));
-  for (const auto &file : fileVec) {
-    spdlog::info("  -- " + file);
   }
 
   auto &checkerManager = CheckerManager::getInstance();
@@ -86,21 +110,7 @@ int main(int argc, const char **argv) {
     spdlog::info("---- {}", checker->getName());
   }
 
-  // 加载compile_commands.json文件生成CompilationDatabase
-  std::string errorMsg = "";
-  auto compilationDB = clang::tooling::CompilationDatabase::loadFromDirectory(
-      compileCommandDir, errorMsg);
-
-  if (!compilationDB) {
-    spdlog::error("Failed to load compile_commands.json: {}", errorMsg);
-    std::exit(-1);
-  }
-  spdlog::info("Loaded compile_commands.json successfully.");
-
-  // complilationDB是一个unique_ptr类型智能指针，使用std::move将其转移到shared_ptr中
-  std::shared_ptr compilationDBPtr = std::move(compilationDB);
-  // 开始执行多线程静态分析
-  Analyse::analyse(compilationDBPtr, fileVec);
+  Analyse::analyse();
   spdlog::info("Analysis finished.");
 
   // 输出分析结果
@@ -109,6 +119,12 @@ int main(int argc, const char **argv) {
   // YokiConfig现在是单例，不再需要传递配置
   defectManager.dumpAsJson();
   defectManager.dumpAsHtml();
+  }else{
+    Analyse::analyse();
+  }
+
+  
+
 
   spdlog::info("Yoki finished running.");
   return 0;

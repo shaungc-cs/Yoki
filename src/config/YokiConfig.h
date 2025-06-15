@@ -3,6 +3,9 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+#include <clang/Tooling/CompilationDatabase.h>
+#include <clang/AST/Decl.h>
 
 class YokiConfig {
 public:
@@ -19,6 +22,20 @@ public:
   std::vector<std::string> getExcludePaths();
   std::string getMode();
   
+  // CompilationDatabase相关方法
+  std::shared_ptr<clang::tooling::CompilationDatabase> getCompilationDB();
+  void setCompilationDB(std::shared_ptr<clang::tooling::CompilationDatabase> db);
+  
+  // FileVec相关方法
+  std::vector<std::string> getFileVec();
+  void initializeFileVec(); // 初始化文件列表
+  
+  // FunctionDecl相关方法
+  void addFunctionDecl(clang::FunctionDecl* funcDecl);
+  const std::vector<clang::FunctionDecl*>& getAllFunctionDecls() const;
+  void clearFunctionDecls();
+  size_t getFunctionDeclCount() const;
+  
   // Mode检查方法
   bool isStaticAnalysis();
   bool isTUGeneration();
@@ -34,6 +51,10 @@ private:
   std::vector<std::string> rulesVec;
   std::vector<std::string> excludePaths;
   std::string mode;
+  
+  std::shared_ptr<clang::tooling::CompilationDatabase> compilationDBPtr;
+  std::vector<std::string> fileVec;
+  std::vector<clang::FunctionDecl*> functionDecls;
   
 };
 

@@ -4,10 +4,13 @@
 #include "YokiUTGenerationASTViositor.h"
 #include <clang/AST/ASTConsumer.h>
 #include <clang/AST/ASTContext.h>
+#include <spdlog/spdlog.h>
 
 class YokiUTGenerationASTConsumer : public clang::ASTConsumer {
 public:
-  explicit YokiUTGenerationASTConsumer(ASTContext *context) : visitor(context) {}
+  explicit YokiUTGenerationASTConsumer(ASTContext *context) : visitor(context) {
+    spdlog::info("YokiUTGenerationASTConsumer initialized.");
+  }
   virtual void HandleTranslationUnit(clang::ASTContext &context);
 
 private:

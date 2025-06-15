@@ -9,4 +9,5 @@ target_link_libraries(
   PUBLIC
   common
   checker_manager
+  ut_generation
 )
