@@ -46,3 +46,9 @@ endif()
 set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
 
 add_subdirectory(src)
+
+# 复制资源文件到构建目录
+configure_file(${CMAKE_SOURCE_DIR}/src/resources/yoki_logo.png 
+               ${CMAKE_BINARY_DIR}/src/resources/yoki_logo.png COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/src/resources/Yoki_framework.png 
+               ${CMAKE_BINARY_DIR}/src/resources/Yoki_framework.png COPYONLY)
