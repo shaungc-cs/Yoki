@@ -9,6 +9,16 @@
 
 Yoki 是一个基于 LLVM libtooling 库开发的现代化静态应用安全测试（SAST）工具。它提供了一个可扩展的框架，允许开发者轻松添加自定义的代码检查器来检测各种安全漏洞和代码质量问题。
 
+## 🏛️ 系统架构
+
+![Yoki Framework](src/resources/yoki_framework.png)
+
+上图展示了 Yoki 的整体架构设计，包括：
+- **AST 遍历层**: 基于 LLVM libtooling 进行源码解析
+- **检查器层**: 可扩展的检查器框架
+- **缺陷管理**: 统一的缺陷收集和管理机制
+- **报告生成**: 多格式的报告输出系统
+
 ## ✨ 主要特性
 
 - 🚀 **基于 LLVM**: 使用 LLVM libtooling 库进行精确的 AST 分析
