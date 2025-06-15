@@ -14,7 +14,6 @@
 #include "CheckerManager.h"
 #include "DefectManager.h"
 #include "YokiConfig.h"
-
 #include "compliance_public_header.h"
 
 using namespace clang;
@@ -59,6 +58,7 @@ int main(int argc, const char **argv) {
   spdlog::info("Path to configuration file: " + configFilePath);
 
   auto &config = YokiConfig::getInstance();
+
   // 读取配置文件
   if (!config.loadConfigFromFile(configFilePath)) {
     spdlog::error("Failed to load configuration file: {}", configFilePath);
@@ -85,12 +85,12 @@ int main(int argc, const char **argv) {
   // complilationDB是一个unique_ptr类型智能指针，使用std::move将其转移到shared_ptr中
   // 并存储到YokiConfig中
   std::shared_ptr compilationDBPtr = std::move(compilationDB);
-  YokiConfig::getInstance().setCompilationDB(compilationDBPtr);
-  
+  config.setCompilationDB(compilationDBPtr);
+
   // 初始化文件列表
-  YokiConfig::getInstance().initializeFileVec();
-  
-  if (YokiConfig::getInstance().getFileVec().empty()) {
+  config.initializeFileVec();
+
+  if (config.getFileVec().empty()) {
     spdlog::error("No files to be checked.");
     return 1;
   }
@@ -122,9 +122,6 @@ int main(int argc, const char **argv) {
   }else{
     Analyse::analyse();
   }
-
-  
-
 
   spdlog::info("Yoki finished running.");
   return 0;
