@@ -6,9 +6,9 @@
 
 using namespace clang;
 
-class YokiASTVisitor : public RecursiveASTVisitor<YokiASTVisitor> {
+class YokiStaticScanASTVisitor : public RecursiveASTVisitor<YokiStaticScanASTVisitor> {
 public:
-  explicit YokiASTVisitor(ASTContext *context) : context(context) {}
+  explicit YokiStaticScanASTVisitor(ASTContext *context) : context(context) {}
 
 #define __YOKI_VISIT_NODE__(NODE) bool Visit##NODE(NODE *node);
 #include "visit_node.inc"
