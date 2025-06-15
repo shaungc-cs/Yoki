@@ -1,4 +1,5 @@
 #include "Utils.h"
+#include "../config/YokiConfig.h"
 #include <cstdlib>
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -6,9 +7,12 @@
 #include <spdlog/spdlog.h>
 
 std::vector<std::string>
-getFileVec(const std::string &compileCommandDir,
-           const std::vector<std::string> &excludePaths) {
+getFileVec(const std::string &compileCommandDir) {
   auto compileCommandFile = compileCommandDir + "/compile_commands.json";
+
+  // 从YokiConfig单例获取排除路径
+  auto& config = YokiConfig::getInstance();
+  const auto& excludePaths = config.getExcludePaths();
 
   // 将字符串模式转换为正则表达式对象
   std::vector<std::regex> excludePatterns;

@@ -5,5 +5,5 @@
   "exclude_paths": [
     ".*/third_party/.*"
   ],
-  "mode": "scan"
+  "mode": "tu_generation"
 }

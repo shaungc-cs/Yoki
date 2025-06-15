@@ -16,6 +16,7 @@ public:
   int size() const { return supportCheckerVec.size(); }
 
   void setUpEnabledCheckers(const std::vector<std::string> &rulesVec);
+  void setUpEnabledCheckers(); // 从YokiConfig获取规则
 
   const std::vector<std::shared_ptr<CheckerBase>> &getSupportCheckers() const {
     return supportCheckerVec;

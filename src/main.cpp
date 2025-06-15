@@ -47,19 +47,18 @@ int main(int argc, const char **argv) {
   spdlog::info("Path to configuration file: " + configFilePath);
 
   // 读取配置文件
-  auto& config = YokiConfig::getInstance();
-  if (!config.loadConfigFromFile(configFilePath)) {
+  if (!YokiConfig::getInstance().loadConfigFromFile(configFilePath)) {
     spdlog::error("Failed to load configuration file: {}", configFilePath);
     return 1;
   }
 
   // 根据配置文件中的项目路径找到compile_command.json文件
-  std::string compileCommandDir = config.getProgramPath() + "/build";
+  std::string compileCommandDir = YokiConfig::getInstance().getProgramPath() + "/build";
   spdlog::info("Compile command directory: " + compileCommandDir);
 
   // 根据compile_commands.json文件获取需要检查的文件列表
   // 会根据用户配置文件中的排除路径进行过滤
-  auto fileVec = getFileVec(compileCommandDir, config.getExcludePaths());
+  auto fileVec = getFileVec(compileCommandDir);
 
   if (fileVec.empty()) {
     spdlog::error("No files to be checked.");
@@ -79,7 +78,7 @@ int main(int argc, const char **argv) {
 
   // 根据用户的配置文件重置checkerManager中的检查器
   // 若用户未显式配置，则默认启用所有检查器
-  checkerManager.setUpEnabledCheckers(config.getRulesVec());
+  checkerManager.setUpEnabledCheckers();
   spdlog::info("Enabled checkers: " +
                std::to_string(checkerManager.getEnabledCheckers().size()));
   // 输出启用的检查器列表

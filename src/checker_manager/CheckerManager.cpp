@@ -4,6 +4,7 @@
 #include <spdlog/spdlog.h>
 
 #include "compliance_public_header.h"
+#include "../config/YokiConfig.h"
 
 void CheckerManager::initializeCheckers() {
 #define __REGISTER_CHECKER__(STANDARD_NAME, CLASS_NAME, CHECKER_NAME, DESC,    \
@@ -47,4 +48,10 @@ void CheckerManager::setUpEnabledCheckers(
     enabledCheckerVec = supportCheckerVec;
     spdlog::info("No rules specified, enabling all checkers.");
   }
+}
+
+void CheckerManager::setUpEnabledCheckers() {
+  // 从YokiConfig单例获取规则
+  auto& config = YokiConfig::getInstance();
+  setUpEnabledCheckers(config.getRulesVec());
 }
