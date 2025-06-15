@@ -138,28 +138,32 @@ int main(int argc, const char **argv) {
     Handler::handle();
     auto funcDecls = config.getAllFunctionDecls();
 
+    // TODO:
+    // 遍历所有函数声明，生成AST并保存到文件，构造访问AI大模型的prompt，接收大模型返回的gtest单元测试，写回到文件夹中并进行编译，统计单元测试覆盖率
+
     for (auto func : funcDecls) {
 
       // ...existing code...
 
-      if (func) {
-        try {
-          // // 使用安全的ASTDumper辅助函数
-          // std::string functionDetails =
-          //     yoki::ASTDumperUtils::getFunctionDetails(func,
-          //                                              config.getASTContext());
-          // llvm::outs() << functionDetails << "\n";
+      // if (func) {
+      //   try {
+      //     // // 使用安全的ASTDumper辅助函数
+      //     // std::string functionDetails =
+      //     //     yoki::ASTDumperUtils::getFunctionDetails(func,
+      //     // config.getASTContext());
+      //     // llvm::outs() << functionDetails << "\n";
 
-          // 可选：保存到文件
-          std::string filename = "ast_dump_" + func->getNameAsString() + ".txt";
-          if (yoki::ASTDumperUtils::saveASTDumpToFile(
-                  func, config.getASTContext(), filename)) {
-            llvm::outs() << "AST dump saved to: " << filename << "\n";
-          }
-        } catch (const std::exception &e) {
-          llvm::errs() << "Error processing function AST: " << e.what() << "\n";
-        }
-      }
+      //     // 可选：保存到文件
+      //     std::string filename = "ast_dump_" + func->getNameAsString() +
+      //     ".txt"; if (yoki::ASTDumperUtils::saveASTDumpToFile(
+      //             func, config.getASTContext(), filename)) {
+      //       llvm::outs() << "AST dump saved to: " << filename << "\n";
+      //     }
+      //   } catch (const std::exception &e) {
+      //     llvm::errs() << "Error processing function AST: " << e.what() <<
+      //     "\n";
+      //   }
+      // }
     }
 
     spdlog::info("Total function declarations collected: {}", funcDecls.size());
