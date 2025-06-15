@@ -1,4 +1,4 @@
-#include "SastConfig.h"
+#include "YokiConfig.h"
 #include <fstream>
 #include <memory>
 #include <nlohmann/json.hpp>
@@ -6,16 +6,16 @@
 
 using json = nlohmann::json;
 
-std::string SastConfig::getProgramName() { return programName; }
+std::string YokiConfig::getProgramName() { return programName; }
 
-std::string SastConfig::getProgramPath() { return programPath; }
+std::string YokiConfig::getProgramPath() { return programPath; }
 
-std::vector<std::string> SastConfig::getRulesVec() { return rulesVec; }
+std::vector<std::string> YokiConfig::getRulesVec() { return rulesVec; }
 
-std::vector<std::string> SastConfig::getExcludePaths() { return excludePaths; }
+std::vector<std::string> YokiConfig::getExcludePaths() { return excludePaths; }
 
-std::unique_ptr<SastConfig>
-SastConfig::loadConfigFromFile(const std::string &filePath) {
+std::unique_ptr<YokiConfig>
+YokiConfig::loadConfigFromFile(const std::string &filePath) {
   std::ifstream file(filePath);
   if (!file.is_open()) {
     spdlog::error("Failed to open config file: {}", filePath);
@@ -42,7 +42,7 @@ SastConfig::loadConfigFromFile(const std::string &filePath) {
       config["exclude_paths"].get<std::vector<std::string>>();
 
   // 创建 Config 对象
-  std::unique_ptr<SastConfig> configObj = std::make_unique<SastConfig>(
+  std::unique_ptr<YokiConfig> configObj = std::make_unique<YokiConfig>(
       programName, programPath, rulesVec, excludePaths);
 
   spdlog::info("Successfully load config from {}", filePath);

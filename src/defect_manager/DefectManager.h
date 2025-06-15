@@ -5,7 +5,7 @@
 #include <mutex>
 #include <vector>
 
-#include "SastConfig.h"
+#include "YokiConfig.h"
 
 class DefectManager {
 public:
@@ -20,7 +20,7 @@ public:
 
   void dumpAsHtml();
 
-  void setSastConfig(std::unique_ptr<SastConfig> &&config) {
+  void setSastConfig(std::unique_ptr<YokiConfig> &&config) {
     sastConfig = std::move(config);
   }
 
@@ -40,7 +40,7 @@ private:
   
   std::vector<Defect> defects;
 
-  std::unique_ptr<SastConfig> sastConfig = nullptr;
+  std::unique_ptr<YokiConfig> sastConfig = nullptr;
 
   std::mutex defectMutex;
 };

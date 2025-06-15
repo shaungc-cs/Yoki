@@ -14,7 +14,7 @@
 #include "Analysis.h"
 #include "CheckerManager.h"
 #include "DefectManager.h"
-#include "SastConfig.h"
+#include "YokiConfig.h"
 #include "Utils.h"
 
 #include "compliance_public_header.h"
@@ -40,6 +40,7 @@ int main(int argc, const char **argv) {
   static llvm::cl::opt<std::string> configFilePath(
       llvm::cl::Positional, llvm::cl::desc("Path to configuration file"),
       llvm::cl::Required, llvm::cl::cat(MyToolCategory));
+      
 
   // 处理命令行参数
   llvm::cl::ParseCommandLineOptions(argc, argv, "Yoki\n");
@@ -48,7 +49,7 @@ int main(int argc, const char **argv) {
 
   // 读取配置文件
   // 优先考虑使用unique_ptr
-  auto config = SastConfig::loadConfigFromFile(configFilePath);
+  auto config = YokiConfig::loadConfigFromFile(configFilePath);
 
   // 根据配置文件中的项目路径找到compile_command.json文件
   std::string compileCommandDir = config->getProgramPath() + "/build";

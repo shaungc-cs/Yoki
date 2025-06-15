@@ -1,8 +1,8 @@
-project(sast_config)
+project(config)
 
 find_package(nlohmann_json REQUIRED)
 
-add_library(${PROJECT_NAME} SastConfig.cpp)
+add_library(${PROJECT_NAME} YokiConfig.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 

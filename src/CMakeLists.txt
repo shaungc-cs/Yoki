@@ -64,7 +64,7 @@ target_link_libraries(${PROJECT_NAME}
   clangStaticAnalyzerFrontend
   clangTooling
   defect
-  sast_config
+  config
   utils
 )
 
@@ -75,5 +75,5 @@ add_subdirectory(checker)
 add_subdirectory(common)
 add_subdirectory(defect_manager)
 add_subdirectory(defect)
-add_subdirectory(sast_config)
+add_subdirectory(config)
 add_subdirectory(utils)

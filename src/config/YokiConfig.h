@@ -5,9 +5,9 @@
 #include <string>
 #include <vector>
 
-class SastConfig : public std::enable_shared_from_this<SastConfig> {
+class YokiConfig : public std::enable_shared_from_this<YokiConfig> {
 public:
-  SastConfig(std::string programName, std::string programPath,
+  YokiConfig(std::string programName, std::string programPath,
              std::vector<std::string> rulesVec,
              std::vector<std::string> excludePaths)
       : programName(programName), programPath(programPath), rulesVec(rulesVec),
@@ -18,7 +18,7 @@ public:
   std::vector<std::string> getRulesVec();
   std::vector<std::string> getExcludePaths();
 
-  static std::unique_ptr<SastConfig>
+  static std::unique_ptr<YokiConfig>
   loadConfigFromFile(const std::string &filePath);
 
 private:
