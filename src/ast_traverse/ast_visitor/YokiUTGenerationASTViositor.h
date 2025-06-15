@@ -7,7 +7,8 @@
 
 using namespace clang;
 
-class YokiUTGenerationASTViositor : public RecursiveASTVisitor<YokiUTGenerationASTViositor> {
+class YokiUTGenerationASTViositor
+    : public RecursiveASTVisitor<YokiUTGenerationASTViositor> {
 public:
   explicit YokiUTGenerationASTViositor(ASTContext *context) : context(context) {
     // 初始化日志记录器

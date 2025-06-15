@@ -6,7 +6,8 @@
 
 using namespace clang;
 
-class YokiStaticScanASTVisitor : public RecursiveASTVisitor<YokiStaticScanASTVisitor> {
+class YokiStaticScanASTVisitor
+    : public RecursiveASTVisitor<YokiStaticScanASTVisitor> {
 public:
   explicit YokiStaticScanASTVisitor(ASTContext *context) : context(context) {}
 

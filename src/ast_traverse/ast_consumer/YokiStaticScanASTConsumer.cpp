@@ -1,5 +1,6 @@
 #include "YokiStaticScanASTConsumer.h"
 
-void YokiStaticScanASTConsumer::HandleTranslationUnit(clang::ASTContext &context) {
+void YokiStaticScanASTConsumer::HandleTranslationUnit(
+    clang::ASTContext &context) {
   visitor.TraverseDecl(context.getTranslationUnitDecl());
 }

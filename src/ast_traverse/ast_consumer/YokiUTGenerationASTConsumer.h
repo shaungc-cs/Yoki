@@ -14,7 +14,7 @@ public:
   virtual void HandleTranslationUnit(clang::ASTContext &context);
 
 private:
-YokiUTGenerationASTViositor visitor;
+  YokiUTGenerationASTViositor visitor;
 };
 
 #endif /* B1881690_E66F_4CC2_A176_D1C0D7F95697 */

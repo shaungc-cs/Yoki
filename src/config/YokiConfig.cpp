@@ -1,14 +1,14 @@
 #include "YokiConfig.h"
+#include <cstdlib>
 #include <fstream>
 #include <nlohmann/json.hpp>
-#include <spdlog/spdlog.h>
 #include <regex>
-#include <cstdlib>
+#include <spdlog/spdlog.h>
 
 using json = nlohmann::json;
 
 // 静态成员变量定义
-YokiConfig& YokiConfig::getInstance() {
+YokiConfig &YokiConfig::getInstance() {
   static YokiConfig instance;
   return instance;
 }
@@ -17,23 +17,23 @@ std::string YokiConfig::getProgramName() { return programName; }
 
 std::string YokiConfig::getProgramPath() { return programPath; }
 
-std::vector<std::string> YokiConfig::getRulesVec() { return rulesVec; }
+std::vector<std::string> &YokiConfig::getRulesVec() { return rulesVec; }
 
-std::vector<std::string> YokiConfig::getExcludePaths() { return excludePaths; }
+std::vector<std::string> &YokiConfig::getExcludePaths() { return excludePaths; }
 
 std::string YokiConfig::getMode() { return mode; }
 
-std::shared_ptr<clang::tooling::CompilationDatabase> YokiConfig::getCompilationDB() {
+std::shared_ptr<clang::tooling::CompilationDatabase>
+YokiConfig::getCompilationDB() {
   return compilationDBPtr;
 }
 
-void YokiConfig::setCompilationDB(std::shared_ptr<clang::tooling::CompilationDatabase> db) {
+void YokiConfig::setCompilationDB(
+    std::shared_ptr<clang::tooling::CompilationDatabase> db) {
   compilationDBPtr = db;
 }
 
-std::vector<std::string> YokiConfig::getFileVec() {
-  return fileVec;
-}
+std::vector<std::string> &YokiConfig::getFileVec() { return fileVec; }
 
 void YokiConfig::initializeFileVec() {
   // 构造compile_commands.json文件路径
@@ -48,7 +48,8 @@ void YokiConfig::initializeFileVec() {
 
   std::ifstream file(compileCommandFile);
   if (!file.is_open()) {
-    spdlog::error("Failed to open compile_commands.json: {}", compileCommandFile);
+    spdlog::error("Failed to open compile_commands.json: {}",
+                  compileCommandFile);
     std::exit(EXIT_FAILURE);
   }
 
@@ -71,38 +72,26 @@ void YokiConfig::initializeFileVec() {
   }
   // 关闭文件
   file.close();
-  
-  spdlog::info("Files to be checked: " + std::to_string(fileVec.size()));
-  for (const auto &file : fileVec) {
-    spdlog::info("  -- " + file);
-  }
 }
 
-void YokiConfig::addFunctionDecl(clang::FunctionDecl* funcDecl) {
+void YokiConfig::addFunctionDecl(clang::FunctionDecl *funcDecl) {
   if (funcDecl != nullptr) {
     functionDecls.push_back(funcDecl);
   }
 }
 
-const std::vector<clang::FunctionDecl*>& YokiConfig::getAllFunctionDecls() const {
+const std::vector<clang::FunctionDecl *> &
+YokiConfig::getAllFunctionDecls() const {
   return functionDecls;
 }
 
-void YokiConfig::clearFunctionDecls() {
-  functionDecls.clear();
-}
+void YokiConfig::clearFunctionDecls() { functionDecls.clear(); }
 
-size_t YokiConfig::getFunctionDeclCount() const {
-  return functionDecls.size();
-}
+size_t YokiConfig::getFunctionDeclCount() const { return functionDecls.size(); }
 
-bool YokiConfig::isStaticAnalysis() { 
-  return mode == "code_analysis"; 
-}
+bool YokiConfig::isStaticAnalysis() { return mode == "code_analysis"; }
 
-bool YokiConfig::isTUGeneration() { 
-  return mode == "tu_generation" ; 
-}
+bool YokiConfig::isTUGeneration() { return mode == "tu_generation"; }
 
 bool YokiConfig::loadConfigFromFile(const std::string &filePath) {
   std::ifstream file(filePath);
@@ -131,7 +120,7 @@ bool YokiConfig::loadConfigFromFile(const std::string &filePath) {
   mode = config["mode"].get<std::string>();
 
   spdlog::info("Successfully load config from {}", filePath);
-  
+
   // 关闭文件
   file.close();
   return true;

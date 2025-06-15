@@ -21,8 +21,9 @@ int Analyse::getThreadSize() {
   return num_threads;
 }
 
-void Analyse::analyse(std::shared_ptr<CompilationDatabase> compilationDB,
-                      const std::vector<std::string> &fileVec) {
+void Analyse::analyse() {
+  // 从YokiConfig单例获取参数
+  auto &config = YokiConfig::getInstance();
 
   std::vector<std::thread> workerPool;
 
@@ -33,26 +34,31 @@ void Analyse::analyse(std::shared_ptr<CompilationDatabase> compilationDB,
   std::mutex mtx;
   std::atomic<int> proceedFileCount(0);
 
-  for (int i = 0; i < threadSize; ++i) {
-    workerPool.emplace_back(std::thread(
-        [&] { Analyse::doAnalyse(compilationDB, fileVec, proceedFileCount); }));
-  }
-
-  for (std::thread &worker : workerPool) {
-    if (worker.joinable()) {
-      worker.join();
+  if (config.isStaticAnalysis()) {
+    spdlog::info("Yoki is running in static analysis mode.");
+    for (int i = 0; i < threadSize; ++i) {
+      workerPool.emplace_back(
+          std::thread([&] { Analyse::doAnalyse(proceedFileCount); }));
     }
+
+    for (std::thread &worker : workerPool) {
+      if (worker.joinable()) {
+        worker.join();
+      }
+    }
+  } else {
+    spdlog::info("Yoki is running in dynamic analysis mode.");
   }
 }
 
-void Analyse::doAnalyse(std::shared_ptr<CompilationDatabase> compilationDB,
-                        const std::vector<std::string> &fileVec,
-                        std::atomic<int> &proceedFileCount) {
+void Analyse::doAnalyse(std::atomic<int> &proceedFileCount) {
+  auto &config = YokiConfig::getInstance();
+  auto compilationDB = config.getCompilationDB();
+  auto fileVec = config.getFileVec();
 
   auto allFileSize = (int)fileVec.size();
 
   while (true) {
-    spdlog::info("test");
     int currentIndex = proceedFileCount.fetch_add(1);
     if (currentIndex >= allFileSize) {
       break;
@@ -64,16 +70,8 @@ void Analyse::doAnalyse(std::shared_ptr<CompilationDatabase> compilationDB,
                  std::to_string(
                      std::hash<std::thread::id>{}(std::this_thread::get_id())),
                  file);
-
     std::vector<std::string> currentFileVec = {file};
     ClangTool Tool(*compilationDB, currentFileVec);
     Tool.run(newFrontendActionFactory<YokiASTFrontendAction>().get());
   }
-}
-
-void Analyse::analyse() {
-  // 从YokiConfig单例获取参数
-  auto& config = YokiConfig::getInstance();
-  spdlog::info(config.getMode());
-  analyse(config.getCompilationDB(), config.getFileVec());
 }

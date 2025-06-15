@@ -30,16 +30,16 @@ int main(int argc, const char **argv) {
   spdlog::set_level(spdlog::level::info);
 
   spdlog::info("Yoki static analysis tool started.");
-  
+
   // 清除默认options
   llvm::cl::HideUnrelatedOptions(MyToolCategory);
 
   // 如果没有提供任何参数，添加--help到参数列表
-  std::vector<const char*> modified_argv;
+  std::vector<const char *> modified_argv;
   int modified_argc = argc;
-  const char** final_argv = argv;
-  
-  if(argc == 1) {
+  const char **final_argv = argv;
+
+  if (argc == 1) {
     modified_argv.push_back(argv[0]);  // 程序名
     modified_argv.push_back("--help"); // 添加--help参数
     modified_argc = 2;
@@ -50,7 +50,6 @@ int main(int argc, const char **argv) {
   static llvm::cl::opt<std::string> configFilePath(
       llvm::cl::Positional, llvm::cl::desc("Path to configuration file"),
       llvm::cl::Required, llvm::cl::cat(MyToolCategory));
-      
 
   // 处理命令行参数
   llvm::cl::ParseCommandLineOptions(modified_argc, final_argv, "Yoki\n");
@@ -65,8 +64,6 @@ int main(int argc, const char **argv) {
     return 1;
   }
 
-
-  if(config.isStaticAnalysis()) {
   // 根据配置文件中的项目路径找到compile_command.json文件
   std::string compileCommandDir = config.getProgramPath() + "/build";
   spdlog::info("Compile command directory: " + compileCommandDir);
@@ -92,34 +89,34 @@ int main(int argc, const char **argv) {
 
   if (config.getFileVec().empty()) {
     spdlog::error("No files to be checked.");
-    return 1;
+    std::exit(EXIT_FAILURE);
   }
 
-  auto &checkerManager = CheckerManager::getInstance();
+  if (config.isStaticAnalysis()) {
+    auto &checkerManager = CheckerManager::getInstance();
 
-  // 初始化检查器，将所有系统支持的检查器全部注册到checkerManager中
-  checkerManager.initializeCheckers();
+    // 初始化检查器，将所有系统支持的检查器全部注册到checkerManager中
+    checkerManager.initializeCheckers();
 
-  // 根据用户的配置文件重置checkerManager中的检查器
-  // 若用户未显式配置，则默认启用所有检查器
-  checkerManager.setUpEnabledCheckers();
-  spdlog::info("Enabled checkers: " +
-               std::to_string(checkerManager.getEnabledCheckers().size()));
-  // 输出启用的检查器列表
-  for (auto &checker : checkerManager.getEnabledCheckers()) {
-    spdlog::info("---- {}", checker->getName());
-  }
+    // 根据用户的配置文件重置checkerManager中的检查器
+    // 若用户未显式配置，则默认启用所有检查器
+    checkerManager.setUpEnabledCheckers();
+    spdlog::info("Enabled checkers: " +
+                 std::to_string(checkerManager.getEnabledCheckers().size()));
+    // 输出启用的检查器列表
+    for (auto &checker : checkerManager.getEnabledCheckers()) {
+      spdlog::info("---- {}", checker->getName());
+    }
 
-  Analyse::analyse();
-  spdlog::info("Analysis finished.");
+    Analyse::analyse();
+    spdlog::info("Static code analysis finished.");
 
-  // 输出分析结果
-  spdlog::info("Size of defects: {}", DefectManager::getInstance().size());
-  auto &defectManager = DefectManager::getInstance();
-  // YokiConfig现在是单例，不再需要传递配置
-  defectManager.dumpAsJson();
-  defectManager.dumpAsHtml();
-  }else{
+    // 输出分析结果
+    spdlog::info("Size of defects: {}", DefectManager::getInstance().size());
+    auto &defectManager = DefectManager::getInstance();
+    // defectManager.dumpAsJson();
+    defectManager.dumpAsHtml();
+  } else {
     Analyse::analyse();
   }
 
