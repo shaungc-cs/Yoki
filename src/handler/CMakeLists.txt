@@ -1,8 +1,8 @@
-project(analysis)
+project(handler)
 
 find_package(spdlog REQUIRED)
 
-add_library(${PROJECT_NAME} Analysis.cpp)
+add_library(${PROJECT_NAME} Handler.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 

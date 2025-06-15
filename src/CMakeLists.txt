@@ -47,7 +47,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog)
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-  analysis
+  handler
   ast_frontend_action
   clangAnalysis
   clangAST
@@ -68,7 +68,7 @@ target_link_libraries(${PROJECT_NAME}
   utils
 )
 
-add_subdirectory(analysis)
+add_subdirectory(handler)
 add_subdirectory(ast_traverse)
 add_subdirectory(checker_manager)
 add_subdirectory(checker)

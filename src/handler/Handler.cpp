@@ -1,4 +1,4 @@
-#include "Analysis.h"
+#include "Handler.h"
 #include "YokiASTFrontendAction.h"
 #include "YokiConfig.h"
 #include <atomic>
@@ -13,7 +13,7 @@
 using namespace clang::tooling;
 using namespace clang;
 
-int Analyse::getThreadSize() {
+int Handler::getThreadSize() {
   // 获取系统的逻辑处理器数量，然后计算线程池大小
   unsigned int num_threads = std::thread::hardware_concurrency() / 2;
   // 防止除以零或零个线程
@@ -21,13 +21,13 @@ int Analyse::getThreadSize() {
   return num_threads;
 }
 
-void Analyse::analyse() {
+void Handler::handle() {
   // 从YokiConfig单例获取参数
   auto &config = YokiConfig::getInstance();
 
   std::vector<std::thread> workerPool;
 
-  auto threadSize = Analyse::getThreadSize();
+  auto threadSize = Handler::getThreadSize();
 
   spdlog::info("Yoki using {} thread to complete its work.", threadSize);
 
@@ -38,7 +38,7 @@ void Analyse::analyse() {
     spdlog::info("Yoki is running in static analysis mode.");
     for (int i = 0; i < threadSize; ++i) {
       workerPool.emplace_back(
-          std::thread([&] { Analyse::doAnalyse(proceedFileCount); }));
+          std::thread([&] { Handler::doHandle(proceedFileCount); }));
     }
 
     for (std::thread &worker : workerPool) {
@@ -51,7 +51,7 @@ void Analyse::analyse() {
   }
 }
 
-void Analyse::doAnalyse(std::atomic<int> &proceedFileCount) {
+void Handler::doHandle(std::atomic<int> &proceedFileCount) {
   auto &config = YokiConfig::getInstance();
   auto compilationDB = config.getCompilationDB();
   auto fileVec = config.getFileVec();

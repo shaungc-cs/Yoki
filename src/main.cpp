@@ -10,11 +10,12 @@
 #include <spdlog/spdlog.h>
 #include <string>
 
-#include "Analysis.h"
 #include "CheckerManager.h"
 #include "DefectManager.h"
+#include "Handler.h"
 #include "YokiConfig.h"
 #include "compliance_public_header.h"
+#include "handler.h"
 
 using namespace clang;
 using namespace clang::tooling;
@@ -108,7 +109,7 @@ int main(int argc, const char **argv) {
       spdlog::info("---- {}", checker->getName());
     }
 
-    Analyse::analyse();
+    Handler::handle();
     spdlog::info("Static code analysis finished.");
 
     // 输出分析结果
@@ -117,7 +118,7 @@ int main(int argc, const char **argv) {
     // defectManager.dumpAsJson();
     defectManager.dumpAsHtml();
   } else {
-    Analyse::analyse();
+    Handler::handle();
   }
 
   spdlog::info("Yoki finished running.");
