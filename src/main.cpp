@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <clang/AST/ASTContext.h>
 #include <clang/AST/RecursiveASTVisitor.h>
 #include <clang/Frontend/CompilerInstance.h>
@@ -48,16 +47,19 @@ int main(int argc, const char **argv) {
   spdlog::info("Path to configuration file: " + configFilePath);
 
   // 读取配置文件
-  // 优先考虑使用unique_ptr
-  auto config = YokiConfig::loadConfigFromFile(configFilePath);
+  auto& config = YokiConfig::getInstance();
+  if (!config.loadConfigFromFile(configFilePath)) {
+    spdlog::error("Failed to load configuration file: {}", configFilePath);
+    return 1;
+  }
 
   // 根据配置文件中的项目路径找到compile_command.json文件
-  std::string compileCommandDir = config->getProgramPath() + "/build";
+  std::string compileCommandDir = config.getProgramPath() + "/build";
   spdlog::info("Compile command directory: " + compileCommandDir);
 
   // 根据compile_commands.json文件获取需要检查的文件列表
   // 会根据用户配置文件中的排除路径进行过滤
-  auto fileVec = getFileVec(compileCommandDir, config->getExcludePaths());
+  auto fileVec = getFileVec(compileCommandDir, config.getExcludePaths());
 
   if (fileVec.empty()) {
     spdlog::error("No files to be checked.");
@@ -77,7 +79,7 @@ int main(int argc, const char **argv) {
 
   // 根据用户的配置文件重置checkerManager中的检查器
   // 若用户未显式配置，则默认启用所有检查器
-  checkerManager.setUpEnabledCheckers(config->getRulesVec());
+  checkerManager.setUpEnabledCheckers(config.getRulesVec());
   spdlog::info("Enabled checkers: " +
                std::to_string(checkerManager.getEnabledCheckers().size()));
   // 输出启用的检查器列表
@@ -105,7 +107,7 @@ int main(int argc, const char **argv) {
   // 输出分析结果
   spdlog::info("Size of defects: {}", DefectManager::getInstance().size());
   auto &defectManager = DefectManager::getInstance();
-  defectManager.setSastConfig(std::move(config));
+  // YokiConfig现在是单例，不再需要传递配置
   defectManager.dumpAsJson();
   defectManager.dumpAsHtml();
 

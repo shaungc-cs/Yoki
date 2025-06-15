@@ -21,7 +21,8 @@ public:
   void dumpAsHtml();
 
   void setSastConfig(std::unique_ptr<YokiConfig> &&config) {
-    sastConfig = std::move(config);
+    // 由于YokiConfig现在是单例模式，不再需要存储副本
+    // 这个方法保留是为了兼容性，但实际上什么都不做
   }
 
   int size() const { return defects.size(); }
@@ -39,8 +40,6 @@ private:
   std::string getCurrentWorkingDirectory() const;
   
   std::vector<Defect> defects;
-
-  std::unique_ptr<YokiConfig> sastConfig = nullptr;
 
   std::mutex defectMutex;
 };

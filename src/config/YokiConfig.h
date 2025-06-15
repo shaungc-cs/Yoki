@@ -1,31 +1,40 @@
 #ifndef E32C7F65_C606_4DEE_9B24_B11CA35DAD40
 #define E32C7F65_C606_4DEE_9B24_B11CA35DAD40
 
-#include <memory>
 #include <string>
 #include <vector>
 
-class YokiConfig : public std::enable_shared_from_this<YokiConfig> {
+class YokiConfig {
 public:
-  YokiConfig(std::string programName, std::string programPath,
-             std::vector<std::string> rulesVec,
-             std::vector<std::string> excludePaths)
-      : programName(programName), programPath(programPath), rulesVec(rulesVec),
-        excludePaths(excludePaths) {}
+  // 获取单例实例
+  static YokiConfig& getInstance();
+  
+  // 删除拷贝构造函数和赋值操作符
+  YokiConfig(const YokiConfig&) = delete;
+  YokiConfig& operator=(const YokiConfig&) = delete;
 
   std::string getProgramName();
   std::string getProgramPath();
   std::vector<std::string> getRulesVec();
   std::vector<std::string> getExcludePaths();
+  std::string getMode();
+  
+  // Mode检查方法
+  bool isStaticAnalysis();
+  bool isTUGeneration();
 
-  static std::unique_ptr<YokiConfig>
-  loadConfigFromFile(const std::string &filePath);
+  bool loadConfigFromFile(const std::string &filePath);
 
 private:
+  // 私有构造函数
+  YokiConfig() = default;
+  
   std::string programName;
   std::string programPath;
   std::vector<std::string> rulesVec;
   std::vector<std::string> excludePaths;
+  std::string mode;
+  
 };
 
 #endif /* E32C7F65_C606_4DEE_9B24_B11CA35DAD40 */
