@@ -16,9 +16,7 @@
 #include "Handler.h"
 #include "YokiConfig.h"
 #include "compliance_public_header.h"
-#include "handler.h"
-
-#include "utils/ASTDumperUtils.h"
+#include "Handler.h"
 
 using namespace clang;
 using namespace clang::tooling;
