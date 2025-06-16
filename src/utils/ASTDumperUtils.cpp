@@ -5,8 +5,6 @@
 #include <memory>
 #include <sstream>
 
-namespace yoki {
-
 std::string ASTDumperUtils::dumpASTNodeToString(
     const clang::Decl *decl, std::shared_ptr<clang::ASTContext> context) {
   if (!decl) {
@@ -75,5 +73,3 @@ ASTDumperUtils::getFunctionDetails(const clang::FunctionDecl *func,
 
   return ss.str();
 }
-
-} // namespace yoki

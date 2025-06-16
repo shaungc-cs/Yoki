@@ -5,8 +5,6 @@
 #include "clang/AST/Decl.h"
 #include <string>
 
-namespace yoki {
-
 class ASTDumperUtils {
 public:
   // 将AST节点转换为字符串
@@ -24,7 +22,5 @@ public:
   getFunctionDetails(const clang::FunctionDecl *func,
                      std::shared_ptr<clang::ASTContext> context);
 };
-
-} // namespace yoki
 
 #endif /* A38285FE_2155_4153_A6EA_8C83946AD862 */

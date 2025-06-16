@@ -16,7 +16,7 @@
 #include "Handler.h"
 #include "YokiConfig.h"
 #include "compliance_public_header.h"
-#include "Handler.h"
+#include "utils/ASTDumperUtils.h"
 
 using namespace clang;
 using namespace clang::tooling;
@@ -143,25 +143,24 @@ int main(int argc, const char **argv) {
 
       // ...existing code...
 
-      // if (func) {
-      //   try {
-      //     // // 使用安全的ASTDumper辅助函数
-      //     // std::string functionDetails =
-      //     //     yoki::ASTDumperUtils::getFunctionDetails(func,
-      //     // config.getASTContext());
-      //     // llvm::outs() << functionDetails << "\n";
+      if (func) {
+        try {
+          // // 使用安全的ASTDumper辅助函数
+          // std::string functionDetails =
+          //     yoki::ASTDumperUtils::getFunctionDetails(func,
+          // config.getASTContext());
+          // llvm::outs() << functionDetails << "\n";
 
-      //     // 可选：保存到文件
-      //     std::string filename = "ast_dump_" + func->getNameAsString() +
-      //     ".txt"; if (yoki::ASTDumperUtils::saveASTDumpToFile(
-      //             func, config.getASTContext(), filename)) {
-      //       llvm::outs() << "AST dump saved to: " << filename << "\n";
-      //     }
-      //   } catch (const std::exception &e) {
-      //     llvm::errs() << "Error processing function AST: " << e.what() <<
-      //     "\n";
-      //   }
-      // }
+          // 可选：保存到文件
+          std::string filename = "ast_dump_" + func->getNameAsString() + ".txt";
+          if (ASTDumperUtils::saveASTDumpToFile(func, config.getASTContext(),
+                                                filename)) {
+            llvm::outs() << "AST dump saved to: " << filename << "\n";
+          }
+        } catch (const std::exception &e) {
+          llvm::errs() << "Error processing function AST: " << e.what() << "\n";
+        }
+      }
     }
 
     spdlog::info("Total function declarations collected: {}", funcDecls.size());
