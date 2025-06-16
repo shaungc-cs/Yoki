@@ -138,35 +138,8 @@ int main(int argc, const char **argv) {
 
   if (config.isTUGeneration()) {
     Handler::handle();
-    // auto funcDecls = config.getAllFunctionDecls();
-
-    // 获取所有函数声明节点，使用引用避免复制
-    const auto &functionDeclNodes = config.getFunctionDeclNodes();
-
-    spdlog::info("Found {} function declaration nodes",
-                 functionDeclNodes.size());
-
-    if (functionDeclNodes.empty()) {
-      spdlog::warn("No function declarations found, skipping AST dump");
-    } else {
-      // TODO:
-      // 遍历所有函数声明，生成AST并保存到文件，构造访问AI大模型的prompt，接收大模型返回的gtest单元测试，写回到文件夹中并进行编译，统计单元测试覆盖率
-
-      for (size_t i = 0; i < functionDeclNodes.size(); ++i) {
-        const auto &node = functionDeclNodes[i];
-
-        if (!node) {
-          spdlog::error("Null function declaration node at index {}", i);
-          continue;
-        }
-
-        auto func = node->getFunctionDecl();
-        auto context = node->getContext();
-
-      } // 结束if (config.isTUGeneration())
-
-      spdlog::info("Yoki finished running.");
-      return 0;
-    }
   }
+
+  spdlog::info("Yoki finished running.");
+  return 0;
 }
