@@ -1,5 +1,4 @@
 #include "ASTDumperUtils.h"
-#include "clang/AST/TextNodeDumper.h"
 #include "clang/Basic/SourceManager.h"
 #include <fstream>
 #include <memory>
@@ -15,9 +14,7 @@ std::string ASTDumperUtils::dumpASTNodeToString(
   llvm::raw_string_ostream stream(result);
 
   try {
-    // 使用TextNodeDumper进行安全的AST输出
-    clang::TextNodeDumper dumper(stream, *context.get(), /*ShowColors=*/false);
-    dumper.Visit(decl);
+    decl->dump(stream);
     stream.flush();
   } catch (...) {
     return "Error: Failed to dump AST node";

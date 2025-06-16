@@ -23,6 +23,4 @@ std::unique_ptr<clang::ASTConsumer> YokiASTFrontendAction::CreateASTConsumer(
     spdlog::error("Unsupported mode: {}", config.getMode());
     std::exit(EXIT_FAILURE);
   }
-
-  config.setASTContext(&context);
 }

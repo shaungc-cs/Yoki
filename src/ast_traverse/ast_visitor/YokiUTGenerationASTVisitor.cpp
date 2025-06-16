@@ -10,7 +10,5 @@ bool YokiUTGenerationASTVisitor::VisitFunctionDecl(FunctionDecl *node) {
                  node->getNameAsString());
     return true; // 返回true表示继续遍历AST
   }
-  // 将函数声明添加到YokiConfig中
-  YokiConfig::getInstance().addFunctionDecl(node);
   return true; // 返回true表示继续遍历AST
 }

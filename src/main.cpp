@@ -10,13 +10,15 @@
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 #include <string>
+#include <system_error>
 
 #include "CheckerManager.h"
 #include "DefectManager.h"
 #include "Handler.h"
 #include "YokiConfig.h"
 #include "compliance_public_header.h"
-#include "utils/ASTDumperUtils.h"
+#include "llvm/Support/raw_ostream.h"
+#include <string>
 
 using namespace clang;
 using namespace clang::tooling;
@@ -134,38 +136,65 @@ int main(int argc, const char **argv) {
 
   if (config.isTUGeneration()) {
     Handler::handle();
-    auto funcDecls = config.getAllFunctionDecls();
+    // auto funcDecls = config.getAllFunctionDecls();
 
     // TODO:
     // 遍历所有函数声明，生成AST并保存到文件，构造访问AI大模型的prompt，接收大模型返回的gtest单元测试，写回到文件夹中并进行编译，统计单元测试覆盖率
 
-    for (auto func : funcDecls) {
+    // for (auto func : funcDecls) {
+    //   if (func) {
+    //     try {
+    //       // 生成文件名：函数名_ast.txt
+    //       std::string filename =
+    //           "ast_output_" + func->getNameAsString() + ".txt";
 
-      // ...existing code...
+    //       // 创建文件输出流
+    //       std::error_code ec;
+    //       llvm::raw_fd_ostream file(filename, ec);
 
-      if (func) {
-        try {
-          // // 使用安全的ASTDumper辅助函数
-          // std::string functionDetails =
-          //     yoki::ASTDumperUtils::getFunctionDetails(func,
-          // config.getASTContext());
-          // llvm::outs() << functionDetails << "\n";
+    //       if (ec) {
+    //         spdlog::error("Failed to create AST output file: {} - {}",
+    //         filename,
+    //                       ec.message());
+    //         continue;
+    //       }
 
-          // 可选：保存到文件
-          std::string filename = "ast_dump_" + func->getNameAsString() + ".txt";
-          if (ASTDumperUtils::saveASTDumpToFile(func, config.getASTContext(),
-                                                filename)) {
-            llvm::outs() << "AST dump saved to: " << filename << "\n";
-          }
-        } catch (const std::exception &e) {
-          llvm::errs() << "Error processing function AST: " << e.what() << "\n";
-        }
-      }
-    }
+    //       // 将函数的AST输出到文件
+    //       spdlog::info("Dumping AST for function: {} to file: {}",
+    //                    func->getNameAsString(), filename);
 
-    spdlog::info("Total function declarations collected: {}", funcDecls.size());
+    //       file << "=== AST Dump for Function: " << func->getNameAsString()
+    //            << " ===\n";
+    //       file << "Return Type: " << func->getReturnType().getAsString()
+    //            << "\n";
+    //       file << "Parameters: " << func->getNumParams() << "\n";
+    //       file << "Is Definition: "
+    //            << (func->isThisDeclarationADefinition() ? "Yes" : "No") <<
+    //            "\n";
+    //       file << "\n=== Raw AST ===\n";
+
+    //       // 使用dump方法将AST输出到文件
+    //       func->dump(file);
+
+    //       file << "\n=== End of AST Dump ===\n";
+    //       file.flush();
+    //       file.close();
+
+    //       spdlog::info("Successfully saved AST to: {}", filename);
+
+    //     } catch (const std::exception &e) {
+    //       spdlog::error("Error processing function {}: {}",
+    //                     func->getNameAsString(), e.what());
+    //     } catch (...) {
+    //       spdlog::error("Unknown error processing function: {}",
+    //                     func->getNameAsString());
+    //     }
+    //   } else {
+    //     spdlog::warn("Encountered null function declaration pointer");
+    //   }
+    // }
+
+    spdlog::info("Yoki finished running.");
+    return 0;
   }
-
-  spdlog::info("Yoki finished running.");
-  return 0;
 }

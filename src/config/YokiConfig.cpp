@@ -74,21 +74,6 @@ void YokiConfig::initializeFileVec() {
   file.close();
 }
 
-void YokiConfig::addFunctionDecl(clang::FunctionDecl *funcDecl) {
-  if (funcDecl != nullptr) {
-    functionDecls.push_back(funcDecl);
-  }
-}
-
-const std::vector<clang::FunctionDecl *> &
-YokiConfig::getAllFunctionDecls() const {
-  return functionDecls;
-}
-
-void YokiConfig::clearFunctionDecls() { functionDecls.clear(); }
-
-size_t YokiConfig::getFunctionDeclCount() const { return functionDecls.size(); }
-
 bool YokiConfig::isStaticAnalysis() { return mode == "code_analysis"; }
 
 bool YokiConfig::isTUGeneration() { return mode == "tu_generation"; }

@@ -1,5 +1,5 @@
 #include "Utils.h"
-#include "../config/YokiConfig.h"
+#include "YokiConfig.h"
 #include <cstdlib>
 #include <fstream>
 #include <nlohmann/json.hpp>
