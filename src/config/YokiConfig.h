@@ -37,6 +37,19 @@ public:
   bool isStaticAnalysis();
   bool isTUGeneration();
 
+  // functionDeclNodes相关方法
+  void addFunctionDeclNode(std::shared_ptr<FunctionDeclNode> node) {
+    functionDeclNodes.push_back(node);
+  }
+
+  void clearFunctionDeclNodes() { functionDeclNodes.clear(); }
+
+  const std::vector<std::shared_ptr<FunctionDeclNode>> &
+  getFunctionDeclNodes() const {
+    return functionDeclNodes;
+  }
+
+  // 加载配置文件
   bool loadConfigFromFile(const std::string &filePath);
 
 private:
@@ -48,10 +61,9 @@ private:
   std::vector<std::string> rulesVec;
   std::vector<std::string> excludePaths;
   std::string mode;
-
   std::shared_ptr<clang::tooling::CompilationDatabase> compilationDBPtr;
   std::vector<std::string> fileVec;
-  std::vector<std::unique_ptr<FunctionDeclNode>> functionDecls;
+  std::vector<std::shared_ptr<FunctionDeclNode>> functionDeclNodes;
 };
 
 #endif /* E32C7F65_C606_4DEE_9B24_B11CA35DAD40 */
