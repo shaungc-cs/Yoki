@@ -68,13 +68,14 @@ target_link_libraries(${PROJECT_NAME}
   utils
 )
 
-add_subdirectory(handler)
 add_subdirectory(ast_traverse)
 add_subdirectory(checker_manager)
 add_subdirectory(checker)
 add_subdirectory(common)
+add_subdirectory(config)
 add_subdirectory(defect_manager)
 add_subdirectory(defect)
-add_subdirectory(config)
+add_subdirectory(handler)
+add_subdirectory(ut_generator)
 add_subdirectory(utils)
 add_subdirectory(function_decl_node)
