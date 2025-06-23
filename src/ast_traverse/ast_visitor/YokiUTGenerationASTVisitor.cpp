@@ -10,7 +10,7 @@
 #include <string>
 
 bool YokiUTGenerationASTVisitor::VisitFunctionDecl(FunctionDecl *node) {
-  // spdlog::info("Visiting function declaration: {}", node->getNameAsString());
+  spdlog::info("Visiting function declaration: {}", node->getNameAsString());
   // // 只收集定义了的函数（有函数体的函数）
   // if (!node->hasBody()) {
   //   spdlog::warn("Function {} does not have a body, skipping.",
@@ -27,10 +27,12 @@ bool YokiUTGenerationASTVisitor::VisitFunctionDecl(FunctionDecl *node) {
 
   std::error_code EC;
   std::unique_ptr<llvm::raw_fd_ostream> OSP =
-      std::make_unique<llvm::raw_fd_ostream>("./OutputFilename.txt", EC);
+      std::make_unique<llvm::raw_fd_ostream>("ast_dump.ansi", EC);
   // 打印位置信息
   auto &OS = *OSP;
+  // 禁用颜色输出
   FullSourceLoc FullLocation = Context->getFullLoc(node->getBeginLoc());
+  spdlog::info("FullLocation: {}", FullLocation.getSpellingLineNumber());
   if (FullLocation.isValid()) {
     OS << FullLocation.getSpellingLineNumber() << ":"
        << FullLocation.getSpellingColumnNumber() << " in "
@@ -38,6 +40,7 @@ bool YokiUTGenerationASTVisitor::VisitFunctionDecl(FunctionDecl *node) {
   }
   OS << " =====\n\n";
 
+  spdlog::info("Run here: {}", node->getNameAsString());
   // if (UsePrettyPrint) {
   //   // 方式1: 使用自定义格式化输出
   //   OS << "// Signature:\n";
@@ -91,5 +94,6 @@ bool YokiUTGenerationASTVisitor::VisitFunctionDecl(FunctionDecl *node) {
   // }
 
   OS << "\n==========================================================\n\n";
+  OS.close();  // 关闭输出流
   return true; // 返回true表示继续遍历AST
 }
