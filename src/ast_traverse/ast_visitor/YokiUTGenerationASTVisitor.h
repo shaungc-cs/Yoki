@@ -14,8 +14,8 @@ public:
   explicit YokiUTGenerationASTVisitor(ASTContext *context)
       : Context(context), Policy(Context->getPrintingPolicy()) {
     // 设置打印策略以获得更详细的输出
-    // Policy.PrintCanonicalTypes = true;
-    // Policy.FullyQualifiedName = true;
+    Policy.PrintCanonicalTypes = true;
+    Policy.FullyQualifiedName = true;
     spdlog::info("YokiUTGenerationASTVisitor initialized.");
   }
 

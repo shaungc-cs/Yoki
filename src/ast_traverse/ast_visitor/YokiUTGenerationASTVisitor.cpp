@@ -11,6 +11,8 @@
 
 bool YokiUTGenerationASTVisitor::VisitFunctionDecl(FunctionDecl *node) {
   spdlog::info("Visiting function declaration: {}", node->getNameAsString());
+
+  auto funcName = node->getNameAsString();
   // // 只收集定义了的函数（有函数体的函数）
   // if (!node->hasBody()) {
   //   spdlog::warn("Function {} does not have a body, skipping.",
@@ -27,9 +29,10 @@ bool YokiUTGenerationASTVisitor::VisitFunctionDecl(FunctionDecl *node) {
 
   std::error_code EC;
   std::unique_ptr<llvm::raw_fd_ostream> OSP =
-      std::make_unique<llvm::raw_fd_ostream>("ast_dump.ansi", EC);
+      std::make_unique<llvm::raw_fd_ostream>(funcName +"_ast_dump.ansi", EC);
   // 打印位置信息
   auto &OS = *OSP;
+  OS.enable_colors(false); // 禁用颜色输出
   // 禁用颜色输出
   FullSourceLoc FullLocation = Context->getFullLoc(node->getBeginLoc());
   spdlog::info("FullLocation: {}", FullLocation.getSpellingLineNumber());
