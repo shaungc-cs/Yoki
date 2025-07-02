@@ -24,6 +24,12 @@ public:
 private:
   ASTContext *Context;
   PrintingPolicy Policy;
+
+  // 辅助函数：获取函数所在的完整命名空间路径
+  std::string getNamespacePrefix(const FunctionDecl *node);
+
+  // 辅助函数：获取函数的完整签名（包括命名空间）
+  std::string getFullFunctionSignature(const FunctionDecl *node);
 };
 
 #endif /* B9A6BE48_F3D8_4505_810D_31AD3F9EE71B */
