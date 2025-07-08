@@ -120,7 +120,7 @@ bool YokiUTGenerationASTVisitor::VisitFunctionDecl(FunctionDecl *node) {
   std::error_code EC;
   std::unique_ptr<llvm::raw_fd_ostream> OSP =
       std::make_unique<llvm::raw_fd_ostream>(
-          fullyQualifiedName + "_ast_dump.ansi", EC);
+          fullyQualifiedName + "_ast_dump.yaml", EC);
   // 打印位置信息
   auto &OS = *OSP;
   OS.enable_colors(false); // 禁用颜色输出
