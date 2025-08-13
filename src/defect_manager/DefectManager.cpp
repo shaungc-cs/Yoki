@@ -1,4 +1,5 @@
 #include "DefectManager.h"
+#include "YokiConfig.h"
 #include "spdlog/spdlog.h"
 #include <chrono>
 #include <cstdlib>
@@ -40,7 +41,7 @@ void DefectManager::dumpAsHtml() {
   std::string htmlFilename = reportDir + "/report.html";
 
   // 读取模板文件
-  std::ifstream templateFile("report_template/report_template.html");
+  std::ifstream templateFile("resources/report_template/report_template.html");
   if (!templateFile.is_open()) {
     spdlog::error(
         "Failed to open report_template/report_template.html for reading.");
@@ -93,12 +94,18 @@ void DefectManager::dumpAsHtml() {
   htmlTemplate = std::regex_replace(
       htmlTemplate, std::regex("\\{\\{FILE_COUNT\\}\\}"), getUniqueFileCount());
   htmlTemplate =
-      std::regex_replace(htmlTemplate, std::regex("\\{\\{PROJECT_PATH\\}\\}"),
-                         getCurrentWorkingDirectory());
+      std::regex_replace(htmlTemplate, std::regex("\\{\\{PROJECT_NAME\\}\\}"),
+                         YokiConfig::getInstance().getProgramName());
   htmlTemplate = std::regex_replace(
       htmlTemplate, std::regex("\\{\\{DEFECT_ROWS\\}\\}"), defectRows.str());
   htmlTemplate = std::regex_replace(
       htmlTemplate, std::regex("\\{\\{GENERATION_TIME\\}\\}"), timeStr.str());
+
+  // 将 logo 文件拷贝到当前目录
+  std::string copyLogoCmd = "cp resources/yoki_logo.png " + reportDir + "/";
+  if (system(copyLogoCmd.c_str()) != 0) {
+    spdlog::warn("Failed to copy logo file to report directory");
+  }
 
   // 修改logo路径为当前目录
   htmlTemplate = std::regex_replace(
@@ -113,12 +120,6 @@ void DefectManager::dumpAsHtml() {
 
   htmlFile << htmlTemplate;
   htmlFile.close();
-
-  // 复制logo文件到报告目录
-  std::string copyLogoCmd = "cp yoki_logo.png " + reportDir + "/";
-  if (system(copyLogoCmd.c_str()) != 0) {
-    spdlog::warn("Failed to copy logo file to report directory");
-  }
 
   // 创建压缩包
   std::string zipFilename = reportDirName + ".zip";

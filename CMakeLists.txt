@@ -48,7 +48,7 @@ set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE 
 add_subdirectory(src)
 
 # 复制资源文件到构建目录
-configure_file(${CMAKE_SOURCE_DIR}/src/resources/yoki_logo.png 
-               ${CMAKE_BINARY_DIR}/src/resources/yoki_logo.png COPYONLY)
-configure_file(${CMAKE_SOURCE_DIR}/src/resources/Yoki_framework.png 
-               ${CMAKE_BINARY_DIR}/src/resources/Yoki_framework.png COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/resources/yoki_logo.png 
+               ${CMAKE_BINARY_DIR}/resources/yoki_logo.png COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/resources/Yoki_framework.png 
+               ${CMAKE_BINARY_DIR}/resources/Yoki_framework.png COPYONLY)

@@ -5,5 +5,5 @@
   "exclude_paths": [
     ".*/third_party/.*"
   ],
-  "mode": "tu_generation"
+  "mode": "code_analysis"
 }

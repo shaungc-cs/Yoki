@@ -31,7 +31,7 @@ C++代码会替换以下占位符：
 - `{{SCAN_TIME}}` - 扫描时间
 - `{{DEFECT_COUNT}}` - 缺陷总数
 - `{{FILE_COUNT}}` - 扫描文件数
-- `{{PROJECT_PATH}}` - 项目路径
+- `{{PROJECT_NAME}}` - 项目名称
 - `{{DEFECT_ROWS}}` - 缺陷数据行
 - `{{GENERATION_TIME}}` - 报告生成时间
 
