@@ -1,6 +1,6 @@
 # Yoki
 
-![Yoki Logo](src/resources/yoki_logo.png)
+![Yoki Logo](resources/yoki_logo.png)
 
 * Yoki is a static code analysis tool based on libtooling from LLVM.
 * Yoki是一个基于LLVM libtooling库开发的静态代码检测工具，搭建了基本框架，只需向其中补充checker即可。
@@ -11,7 +11,7 @@ Yoki 是一个基于 LLVM libtooling 库开发的现代化静态应用安全测�
 
 ## 🏛️ 系统架构
 
-![Yoki Framework](src/resources/yoki_framework.png)
+![Yoki Framework](resources/yoki_framework.png)
 
 上图展示了 Yoki 的整体架构设计，包括：
 - **AST 遍历层**: 基于 LLVM libtooling 进行源码解析
